@@ -100,6 +100,7 @@ const BidSubView = () => {
             onChange={handleInputChange}
             required
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            className='bg-secondary rounded-md'
           />
         </div>
 
@@ -114,6 +115,7 @@ const BidSubView = () => {
             onChange={handleInputChange}
             required
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            className='bg-secondary rounded-md'
           />
         </div>
 
@@ -127,6 +129,8 @@ const BidSubView = () => {
             onChange={handleInputChange}
             required
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+
+            className='bg-secondary rounded-md'
           />
         </div>
 
@@ -135,12 +139,11 @@ const BidSubView = () => {
           disabled={submitStatus === 'submitting'}
           style={{ 
             padding: '10px', 
-            backgroundColor: '#007bff', 
-            color: 'white', 
             border: 'none', 
             borderRadius: '4px', 
             cursor: 'pointer' 
           }}
+          className='bg-accent text-base-100'
         >
           {submitStatus === 'submitting' ? 'Submitting...' : 'Submit Bid'}
         </button>
