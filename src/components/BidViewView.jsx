@@ -17,14 +17,11 @@ const BidViewView = () => {
 
   const fetchBids = async () => {
     try {
-      console.log('Fetching bids for shipment:', id);
       
       const { data, error } = await supabase
         .from('bids_with_shipments_view')
         .select('*')
         .eq('shipment_id', id);
-
-      console.log('Supabase response:', { data, error });
 
       if (error) throw error;
       setBidData(data);
@@ -40,31 +37,42 @@ const BidViewView = () => {
     try {
       setSending(true);
       setSelectedBid(bid);
-
-      // Call your backend API endpoint that will handle the Twilio integration
-      const response = await fetch('/api/send-bid-selection', {
+      console.log("made it to handleBidSelection")
+      const username = import.meta.env.VITE_TWILIO_ACCOUNT_SID
+  
+      const response = await fetch('http://localhost:3000/api/send-bid-selection', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          username: username,
           phoneNumber: bid.bid_phone_number,
           shipmentId: id,
           shipmentCompany: bidData[0].shipment_company_name,
           bidderName: bid.bid_name,
-          // Add any other relevant information you want to include in the message
         }),
       });
-
+  
+      const data = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Failed to send selection notification');
+        throw new Error(data.error || data.message || 'Failed to send selection notification');
       }
-
+  
+      // Update the bid status in Supabase
+      const { error: supabaseError } = await supabase
+        .from('bids')
+        .update({ status: 'selected' })
+        .eq('id', bid.id);
+  
+      if (supabaseError) throw supabaseError;
+  
       // Refresh the bids data
       await fetchBids();
     } catch (err) {
-      setError('Error selecting bid: ' + err.message);
-      console.error(err);
+      console.error('Detailed selection error:', err);
+      setError(`Error selecting bid: ${err.message}`);
     } finally {
       setSending(false);
     }
