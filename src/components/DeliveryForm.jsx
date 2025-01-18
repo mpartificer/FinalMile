@@ -63,6 +63,20 @@ function App() {
 
       if (error) throw error
 
+      const response = await fetch('/api/notify-overflow-companies', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          shipmentId: data[0].id
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to notify overflow companies');
+      }
+
       // Clear the form
       setContactName('')
       setCompanyName('')

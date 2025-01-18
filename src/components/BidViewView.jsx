@@ -51,6 +51,7 @@ const BidViewView = () => {
           shipmentId: id,
           shipmentCompany: bidData[0].shipment_company_name,
           bidderName: bid.bid_name,
+          companyPhoneNumber: bid.shipment_phone_number
         }),
       });
   
@@ -61,12 +62,19 @@ const BidViewView = () => {
       }
   
       // Update the bid status in Supabase
-      const { error: supabaseError } = await supabase
-        .from('bids')
+      const { error: bidUpdateError } = await supabase
+        .from('Bids')
         .update({ status: 'selected' })
         .eq('id', bid.id);
   
-      if (supabaseError) throw supabaseError;
+      if (bidUpdateError) throw bidUpdateError;
+
+      const { error: shipmentUpdateError } = await supabase
+        .from('Shipments')
+        .update({ status: 'closed' })
+        .eq('id', bid.shipment_id);
+
+      if (shipmentUpdateError) throw shipmentUpdateError;
   
       // Refresh the bids data
       await fetchBids();

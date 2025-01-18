@@ -1,32 +1,34 @@
 // backend/controllers/bidController.js
 const twilio = require('twilio');
 
-const client = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
 const sendBidSelection = async (req, res) => {
-    console.log(import.meta.env.TWILIO_ACCOUNT_SID)
-    console.log(import.meta.env.TWILIO_AUTH_TOKEN)
-    console.log(import.meta.env.TWILIO_PHONE_NUMBER)
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
   try {
-    const { phoneNumber, shipmentId, shipmentCompany, bidderName } = req.body;
+    const { phoneNumber, shipmentId, shipmentCompany, bidderName, companyPhoneNumber } = req.body;
     
-    console.log('Received request with data:', { phoneNumber, shipmentId, shipmentCompany, bidderName });
+    // Log environment variables (for debugging only - remove in production)
+    console.log('Checking Twilio credentials:', {
+      hasSID: !!process.env.TWILIO_ACCOUNT_SID,
+      hasToken: !!process.env.TWILIO_AUTH_TOKEN,
+      hasPhone: !!process.env.TWILIO_PHONE_NUMBER
+    });
     
     // Verify Twilio credentials are present
     if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_PHONE_NUMBER) {
-      throw new Error('Missing Twilio credentials');
+      throw new Error('Missing Twilio credentials in backend environment');
     }
+
+    const client = twilio(
+      process.env.TWILIO_ACCOUNT_SID,
+      process.env.TWILIO_AUTH_TOKEN
+    );
 
     // Send message to selected bidder
     const message = await client.messages.create({
-      body: `Congratulations ${bidderName}! You have been selected for shipment #${shipmentId} from ${shipmentCompany}. Please contact them at [SHIPPER_CONTACT_INFO] to coordinate delivery details.`,
+      body: `Congratulations ${bidderName}! You have been selected for shipment #${shipmentId} from ${shipmentCompany}. Please contact them at ${companyPhoneNumber} to coordinate delivery details.`,
       from: process.env.TWILIO_PHONE_NUMBER,
       to: phoneNumber
     });

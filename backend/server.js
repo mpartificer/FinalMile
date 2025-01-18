@@ -1,7 +1,10 @@
 // backend/server.js
+require('dotenv').config();  // Add this at the top
 const express = require('express');
 const cors = require('cors');
-const bidRoutes = require('./Routes/bids');
+const bidRoutes = require('./routes/bids');
+const notificationRoutes = require('./routes/notificationRoutes');
+
 
 const app = express();
 
@@ -20,6 +23,7 @@ app.use(express.json());
 
 // Use the bid routes
 app.use('/api', bidRoutes);
+app.use('/api', notificationRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
