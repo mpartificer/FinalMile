@@ -37,10 +37,10 @@ const BidViewView = () => {
     try {
       setSending(true);
       setSelectedBid(bid);
-      console.log("made it to handleBidSelection")
-      const username = import.meta.env.VITE_TWILIO_ACCOUNT_SID
+      
+      const username = import.meta.env.VITE_TWILIO_ACCOUNT_SID;
   
-      const response = await fetch('http://localhost:3000/api/send-bid-selection', {
+      const response = await fetch('http://localhost:3000/api/send-notifications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,31 +49,34 @@ const BidViewView = () => {
           username: username,
           phoneNumber: bid.bid_phone_number,
           shipmentId: id,
-          shipmentCompany: bidData[0].shipment_company_name,
+          shipmentCompany: bid.shipment_company_name,
           bidderName: bid.bid_name,
-          companyPhoneNumber: bid.shipment_phone_number
+          companyPhoneNumber: bid.shipment_phone_number,
+          shipperEmail: bid.shipment_email,
+          bidAmount: bid.bid_amount,
+          bidderEmail: bid.bid_email,
         }),
       });
   
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error || data.message || 'Failed to send selection notification');
+        throw new Error(data.error || data.message || 'Failed to send notifications');
       }
   
       // Update the bid status in Supabase
       const { error: bidUpdateError } = await supabase
         .from('Bids')
         .update({ status: 'selected' })
-        .eq('id', bid.id);
+        .eq('id', bid.bid_id);
   
       if (bidUpdateError) throw bidUpdateError;
-
+  
       const { error: shipmentUpdateError } = await supabase
         .from('Shipments')
         .update({ status: 'closed' })
         .eq('id', bid.shipment_id);
-
+  
       if (shipmentUpdateError) throw shipmentUpdateError;
   
       // Refresh the bids data

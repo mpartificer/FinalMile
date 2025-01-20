@@ -1,10 +1,10 @@
-// backend/routes/bids.js
 const express = require('express');
 const router = express.Router();
-const { sendBidSelection } = require('../controllers/bidController');
+const { sendNotifications } = require('../controllers/bidController');
 
-console.log("we made it to the routes")
-
-router.post('/send-bid-selection', sendBidSelection);
+// Update the route to use the new combined notifications endpoint
+router.post('/send-notifications', sendNotifications);
 
 module.exports = router;
+
+
