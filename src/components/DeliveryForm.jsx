@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { v4 as uuidv4 } from 'uuid' // Add this import
+import { v4 as uuidv4 } from 'uuid'
 import '../App.css'
 import Header from './Header.jsx'
 import VehicleSelector from './VehicleSelector.jsx'
@@ -15,7 +15,7 @@ function App() {
   const [vehicleSize, setVehicleSize] = useState(null);
   const [ruralArea, setRuralArea] = useState('');
   const [deliverByDate, setDeliverByDate] = useState('');
-  const [deliveryPhoto, setDeliveryPhoto] = useState(null); // Changed to null
+  const [deliveryPhoto, setDeliveryPhoto] = useState(null);
 
   const handleNewDelivery = async (e) => {
     e.preventDefault()
@@ -24,7 +24,7 @@ function App() {
     try {
       // First, upload the image to Storage
       let imageUrl = null
-      if (deliveryPhoto && deliveryPhoto.name) { // Add null check for deliveryPhoto and name
+      if (deliveryPhoto && deliveryPhoto.name) {
         const fileExt = deliveryPhoto.name.split('.').pop()
         const fileName = `${uuidv4()}.${fileExt}`
         
@@ -36,7 +36,6 @@ function App() {
           throw uploadError
         }
 
-        // Get the public URL of the uploaded image
         const { data: { publicUrl } } = supabase.storage
           .from('Manifests')
           .getPublicUrl(fileName)
@@ -45,7 +44,7 @@ function App() {
       }
 
       // Then create the shipment record
-      const { data, error } = await supabase
+      const { data: shipmentData, error: shipmentError } = await supabase
         .from('Shipments')
         .insert([
           {
@@ -61,20 +60,22 @@ function App() {
         ])
         .select()
 
-      if (error) throw error
+      if (shipmentError) throw shipmentError
 
-      const response = await fetch('/api/notify-overflow-companies', {
+      // Notify overflow companies using existing Express backend
+      const notifyResponse = await fetch('http://localhost:3000/api/notify-overflow-companies', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          shipmentId: data[0].id
+          shipmentId: shipmentData[0].id
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to notify overflow companies');
+      if (!notifyResponse.ok) {
+        const errorData = await notifyResponse.json();
+        throw new Error(errorData.error || 'Failed to notify overflow companies');
       }
 
       // Clear the form
@@ -98,22 +99,24 @@ function App() {
   }
 
   return (
-      <div>
-        <Header />
-          <form className='flex flex-col gap-2 p-3 bg-primary items-center rounded-xl text-base-100 mt-9' data-theme="mytheme" onSubmit={handleNewDelivery}>
-            Enter your delivery information below:
-            <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Contact Name' name='Contact Name' value={contactName} onChange={(e) => setContactName(e.target.value)}/>
-            <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Company Name' name='Company Name' value={companyName} onChange={(e) => setCompanyName(e.target.value)}/>
-            <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='tel' placeholder='Phone Number' name='Phone Number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
-            <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='email' placeholder='Email' name='Email' value={email} onChange={(e) => setEmail(e.target.value)}/>
-            <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Rural Area' name='Rural Area' value={ruralArea} onChange={(e) => setRuralArea(e.target.value)}/>
-            <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Deliver-By Date' name='Deliver-By Date' value={deliverByDate} onChange={(e) => setDeliverByDate(e.target.value)}/>
-            <VehicleSelector setVehicleSize={setVehicleSize} />
-            <ImageUploader setDeliveryPhoto={setDeliveryPhoto} />              
-            <button type="submit" className='w-48 border-base-100 bg-accent p-5 mt-4 text-base-100 font-bold' disabled={loading}>{loading ? 'Loading...' : 'Submit Delivery!'}</button>
-          </form>
-        </div>
-    )
+    <div>
+      <Header />
+      <form className='flex flex-col gap-2 p-3 bg-primary items-center rounded-xl text-base-100 mt-9' data-theme="mytheme" onSubmit={handleNewDelivery}>
+        Enter your delivery information below:
+        <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Contact Name' name='Contact Name' value={contactName} onChange={(e) => setContactName(e.target.value)}/>
+        <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Company Name' name='Company Name' value={companyName} onChange={(e) => setCompanyName(e.target.value)}/>
+        <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='tel' placeholder='Phone Number' name='Phone Number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}/>
+        <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='email' placeholder='Email' name='Email' value={email} onChange={(e) => setEmail(e.target.value)}/>
+        <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Rural Area' name='Rural Area' value={ruralArea} onChange={(e) => setRuralArea(e.target.value)}/>
+        <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Deliver-By Date' name='Deliver-By Date' value={deliverByDate} onChange={(e) => setDeliverByDate(e.target.value)}/>
+        <VehicleSelector setVehicleSize={setVehicleSize} />
+        <ImageUploader setDeliveryPhoto={setDeliveryPhoto} />              
+        <button type="submit" className='w-48 border-base-100 bg-accent p-5 mt-4 text-base-100 font-bold' disabled={loading}>
+          {loading ? 'Loading...' : 'Submit Delivery!'}
+        </button>
+      </form>
+    </div>
+  )
 }
 
 export default App

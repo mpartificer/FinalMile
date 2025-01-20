@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
  
-const ImageUploader = ({ setDeliveryPhoto }) => {
+const ImageUploader = ({ setDeliveryPhoto, deliveryPhoto }) => {
     const [previewImage, setPreviewImage] = useState(null);
+    const fileInputRef = useRef(null);
 
     function handleChange(e) {
         if (e.target.files && e.target.files[0]) {
@@ -15,21 +16,31 @@ const ImageUploader = ({ setDeliveryPhoto }) => {
             setDeliveryPhoto(file);
         }
     }
+
+    React.useEffect(() => {
+        if (!deliveryPhoto) {
+            setPreviewImage(null);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    }, [deliveryPhoto]);
  
     return (
         <div className="">
             <input 
+                ref={fileInputRef}
                 type="file" 
                 className="file-input file-input-bordered file-input-secondary w-full max-w-xs" 
                 onChange={handleChange}
-                accept="image/*" // Optional: restrict to image files only
+                accept="image/*"
             />
             {previewImage && (
                 <img 
                     src={previewImage} 
                     alt="Preview" 
                     className="mt-2 max-w-xs"
-                    style={{ maxHeight: '200px' }} // Optional: control preview size
+                    style={{ maxHeight: '200px' }}
                 />
             )}
         </div>

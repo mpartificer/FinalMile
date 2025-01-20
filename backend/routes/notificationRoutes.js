@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { notifyOverflowCompanies } = require('../controllers/notificationController');
 
-router.post('/notify-overflow-companies', notifyOverflowCompanies);
+console.log('Setting up notification routes');
 
+router.post('/notify-overflow-companies', (req, res) => {
+    console.log('Route hit: /notify-overflow-companies');
+    notifyOverflowCompanies(req, res);
+});
 module.exports = router;
