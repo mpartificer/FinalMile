@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const bidRoutes = require('./routes/bids');
 const notificationRoutes = require('./routes/notificationRoutes');
+const emailRoutes = require('./routes/emailRoutes');
+
 
 
 const app = express();
@@ -38,6 +40,7 @@ app.use((req, res, next) => {
 // Use the bid routes
 app.use('/api', bidRoutes);
 app.use('/api', notificationRoutes);
+app.use(emailRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

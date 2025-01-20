@@ -17,6 +17,30 @@ function App() {
   const [deliverByDate, setDeliverByDate] = useState('');
   const [deliveryPhoto, setDeliveryPhoto] = useState(null);
 
+  const sendEmailNotification = async (recipientEmail, deliveryId) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/send-confirmation-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: recipientEmail,
+          deliveryId: deliveryId,
+          contactName: contactName
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send confirmation email');
+      }
+    } catch (error) {
+      console.error('Error sending confirmation email:', error);
+      // Don't block the form submission if email fails
+    }
+  };
+
   const handleNewDelivery = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -61,6 +85,9 @@ function App() {
         .select()
 
       if (shipmentError) throw shipmentError
+
+      // Send confirmation email
+      await sendEmailNotification(email, shipmentData[0].id)
 
       // Notify overflow companies using existing Express backend
       const notifyResponse = await fetch('http://localhost:3000/api/notify-overflow-companies', {
@@ -110,7 +137,7 @@ function App() {
         <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Rural Area' name='Rural Area' value={ruralArea} onChange={(e) => setRuralArea(e.target.value)}/>
         <input className='p-2 m-1 rounded-md bg-secondary placeholder:text-neutral text-base-100 w-96' type='text' placeholder='Deliver-By Date' name='Deliver-By Date' value={deliverByDate} onChange={(e) => setDeliverByDate(e.target.value)}/>
         <VehicleSelector setVehicleSize={setVehicleSize} />
-        <ImageUploader setDeliveryPhoto={setDeliveryPhoto} />              
+        <ImageUploader setDeliveryPhoto={setDeliveryPhoto} deliveryPhoto={deliveryPhoto}/>              
         <button type="submit" className='w-48 border-base-100 bg-accent p-5 mt-4 text-base-100 font-bold' disabled={loading}>
           {loading ? 'Loading...' : 'Submit Delivery!'}
         </button>
