@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
- 
+import Lightbox from "./Lightbox";
+
 const ImageUploader = ({ setDeliveryPhoto, deliveryPhoto }) => {
     const [previewImage, setPreviewImage] = useState(null);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const fileInputRef = useRef(null);
 
     function handleChange(e) {
@@ -36,12 +38,19 @@ const ImageUploader = ({ setDeliveryPhoto, deliveryPhoto }) => {
                 accept="image/*"
             />
             {previewImage && (
-                <img 
-                    src={previewImage} 
-                    alt="Preview" 
-                    className="mt-2 max-w-xs"
-                    style={{ maxHeight: '200px' }}
-                />
+                <div className="mt-4">
+                    <img
+                        src={previewImage}
+                        alt="Preview"
+                        className="max-w-full h-auto rounded cursor-pointer"
+                        onClick={() => setIsLightboxOpen(true)}
+                    />
+                    <Lightbox
+                        isOpen={isLightboxOpen}
+                        onClose={() => setIsLightboxOpen(false)}
+                        imageUrl={previewImage}
+                    />
+                </div>
             )}
         </div>
     );

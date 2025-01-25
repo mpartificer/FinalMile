@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../../supabaseClient.js';
 import Header from './Header.jsx';
+import Lightbox from './Lightbox.jsx'
 
 const BidViewView = () => {
   const { id } = useParams();
@@ -10,6 +11,8 @@ const BidViewView = () => {
   const [error, setError] = useState(null);
   const [selectedBid, setSelectedBid] = useState(null);
   const [sending, setSending] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
 
   useEffect(() => {
     fetchBids();
@@ -96,17 +99,27 @@ const BidViewView = () => {
   return (
     <div className=''>
       <Header />
-      <div className="flex flex-row gap-2 mt-16 bg-primary rounded-lg p-4 m-4">
+      <div className='border border-base-100 rounded-lg mt-16 p-8'>
+      <h1 className='text-base-100 text-semibold text-xl text-left mb-2'>Review bids for {id}</h1>
+
+      <div className="flex flex-row gap-2 bg-primary space-between rounded-lg">
+        
         <div className='max-w-lg max-h-lg rounded-lg overflow-hidden'>
-          {bidData[0]?.image_url && (
-            <div style={{ marginBottom: '20px' }}>
-              <img 
-                src={bidData[0].image_url} 
-                alt="Shipment"
-                style={{ width: '100%', borderRadius: '4px' }}
-              />
-            </div>
-          )}
+        {bidData[0]?.image_url && (
+  <div style={{ marginBottom: '20px' }}>
+    <img 
+      src={bidData[0].image_url} 
+      alt="Shipment"
+      style={{ width: '100%', borderRadius: '4px', cursor: 'pointer' }}
+      onClick={() => setIsLightboxOpen(true)}
+    />
+    <Lightbox
+      isOpen={isLightboxOpen}
+      onClose={() => setIsLightboxOpen(false)}
+      imageUrl={bidData[0].image_url}
+    />
+  </div>
+)}
         </div>
         <div className="flex flex-col text-base-100">
           <div className="flex flex-row gap-2">Shipment Company: <div className="font-bold">{bidData[0].shipment_company_name}</div></div>
@@ -115,26 +128,26 @@ const BidViewView = () => {
           <div className="flex flex-row gap-2">Deliver By: <div className="font-bold">{bidData[0].deliver_by_date}</div></div>
         </div>
       </div>
-      <div className='text-base-100'>Review bids for {id}</div>
+      <div className='divider divider-accent'></div>
       <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Received Bids</h2>
+        <h2 className="text-xl font-bold text-base-100 mb-4">Received Bids</h2>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-100">
-                <th className="p-3 text-left border">Bidder Name</th>
-                <th className="p-3 text-left border">Phone Number</th>
-                <th className="p-3 text-left border">Bid Amount</th>
-                <th className="p-3 text-left border">Actions</th>
+                <th className="p-3 text-left text-base-100 border">Bidder Name</th>
+                <th className="p-3 text-left text-base-100 border">Phone Number</th>
+                <th className="p-3 text-left text-base-100 border">Bid Amount</th>
+                <th className="p-3 text-left text-base-100 border">Actions</th>
               </tr>
             </thead>
             <tbody>
               {bidData.map((bid, index) => (
                 <tr key={index} className="hover:bg-gray-50">
-                  <td className="p-3 border">{bid.bid_name}</td>
-                  <td className="p-3 border">{bid.bid_phone_number}</td>
-                  <td className="p-3 border">${bid.bid_amount}</td>
-                  <td className="p-3 border">
+                  <td className="p-3 border text-base-100">{bid.bid_name}</td>
+                  <td className="p-3 border text-base-100">{bid.bid_phone_number}</td>
+                  <td className="p-3 border text-base-100">${bid.bid_amount}</td>
+                  <td className="p-3 border text-base-100">
                     <button
                       onClick={() => handleBidSelection(bid)}
                       disabled={sending || bid.status === 'selected'}
@@ -159,6 +172,7 @@ const BidViewView = () => {
           </table>
         </div>
       </div>
+    </div>
     </div>
   );
 };

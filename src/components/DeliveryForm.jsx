@@ -5,8 +5,7 @@ import Header from './Header.jsx'
 import VehicleSelector from './VehicleSelector.jsx'
 import ImageUploader from './ImageUploader.jsx'
 import { supabase } from '../../supabaseClient.js'
-
-
+import Lightbox from './Lightbox';
 
 function App() {
   const [loading, setLoading] = useState(false)
@@ -18,6 +17,8 @@ function App() {
   const [ruralArea, setRuralArea] = useState('');
   const [deliverByDate, setDeliverByDate] = useState('');
   const [deliveryPhoto, setDeliveryPhoto] = useState(null);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const sendEmailNotification = async (recipientEmail, deliveryId) => {
     try {
@@ -128,53 +129,53 @@ function App() {
   }
 
   return (
-    <div>
+<div className="bg-white min-h-screen">
       <Header />
-      <form className='max-w-xl mx-auto p-8 bg-white rounded-lg shadow-md mt-9' onSubmit={handleNewDelivery}>
-        <h1 className="text-xl font-semibold mb-2">Submit Delivery Overflow</h1>
-        <p className="text-gray-600 mb-6">Upload your manifest and provide details for bidding</p>
-        <input className='w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+      <form className='max-w-xl mx-auto p-8 bg-white rounded-lg shadow-md mt-16 border border-neutral' onSubmit={handleNewDelivery}>
+        <h1 className="text-xl text-gray-900 font-semibold mb-2 text-left">Submit Delivery Overflow</h1>
+        <p className="text-gray-600 mb-6 text-left">Upload your manifest and provide details for bidding</p>
+        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
           type='text' 
           placeholder='Contact Name' 
           name='Contact Name' 
           value={contactName} 
           onChange={(e) => setContactName(e.target.value)}/>
-        <input className='w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
           type='text'  
           placeholder='Company Name' 
           name='Company Name' 
           value={companyName} 
           onChange={(e) => setCompanyName(e.target.value)}/>
-        <input className='w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
           type='tel'  
           placeholder='Phone Number' 
           name='Phone Number' 
           value={phoneNumber} 
           onChange={(e) => setPhoneNumber(e.target.value)}/>
-        <input className='w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
           type='email'  
           placeholder='Email' 
           name='Email' 
           value={email} 
           onChange={(e) => setEmail(e.target.value)}/>
-        <input className='w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
           type='text'  
           placeholder='Delivery Area' 
           name='Delivery Area' 
           value={ruralArea} 
           onChange={(e) => setRuralArea(e.target.value)}/>
-        <input className='w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
           type='date'  
           placeholder='Deliver-By Date' 
           name='Deliver-By Date' 
           value={deliverByDate} 
           onChange={(e) => setDeliverByDate(e.target.value)}/>       
         <div className="mb-6">
-          <h2 className="text-base font-medium mb-4">Select Required Vehicle Type</h2>
+          <h2 className="text-base text-gray-900 font-medium mb-4 text-left">Select Required Vehicle Type</h2>
           <VehicleSelector setVehicleSize={setVehicleSize} />
         </div>
         <div className="mb-6">
-          <h2 className="text-base font-medium mb-4">Upload Manifest Image</h2>
+          <h2 className="text-base text-gray-900 font-medium mb-4 text-left">Upload Manifest Image</h2>
           <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
             <ImageUploader setDeliveryPhoto={setDeliveryPhoto} deliveryPhoto={deliveryPhoto} />
           </div>

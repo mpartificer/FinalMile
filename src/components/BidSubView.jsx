@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../../supabaseClient.js'
 import Header from './Header.jsx'
+import Lightbox from './Lightbox.jsx';
 
 const BidSubView = () => {
   const { id } = useParams();
@@ -14,6 +15,7 @@ const BidSubView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitStatus, setSubmitStatus] = useState('');
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   useEffect(() => {
     fetchShipment();
@@ -77,24 +79,37 @@ const BidSubView = () => {
   return (
     <div>
       <Header />
-    <div className="mt-24 max-w-lg bg-primary rounded-xl p-4 text-base-100">
-      <h2>Submit Bid for Shipment #{id}</h2>
+    <div className="mt-16 p-8 max-w-lg bg-primary rounded-xl text-base-100 border border-neutral">
+      <h1 className='text-xl text-gray-900 font-semibold mb-2 text-left'>Submit Bid for Shipment #{id}</h1>
       
       {shipment?.image_url && (
-        <div style={{ marginBottom: '20px' }}>
-          <img 
-            src={shipment.image_url} 
-            alt="Shipment"
-            style={{ width: '100%', borderRadius: '4px' }}
-          />
+  <div style={{ marginBottom: '20px' }}>
+    <img 
+      src={shipment.image_url} 
+      alt="Shipment"
+      style={{ width: '100%', borderRadius: '4px', cursor: 'pointer' }}
+      onClick={() => setIsLightboxOpen(true)}
+    />
+    <Lightbox
+      isOpen={isLightboxOpen}
+      onClose={() => setIsLightboxOpen(false)}
+      imageUrl={shipment.image_url}
+    />
+  </div>
+)}
+              <div className="flex flex-col text-base-100">
+          <div className="flex flex-row gap-2">Shipment Company: <div className="font-bold">{shipment.company_name}</div></div>
+          <div className="flex flex-row gap-2">Delivery Area: <div className="font-bold">{shipment.rural_area}</div></div>
+          <div className="flex flex-row gap-2">Vehicle Size: <div className="font-bold">{shipment.vehicle_size}</div></div>
+          <div className="flex flex-row gap-2">Deliver By: <div className="font-bold">{shipment.deliver_by_date}</div></div>
         </div>
-      )}
-
+        <div className="divider divider-neutral"></div>
+      <h2 className='text-left'>Enter Bid Below</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <div>
-          <label htmlFor="name">Name:</label>
           <input
             id="name"
+            placeholder='Name'
             name="name"
             value={formData.name}
             onChange={handleInputChange}
@@ -105,8 +120,8 @@ const BidSubView = () => {
         </div>
 
         <div>
-          <label htmlFor="bid">Bid Amount:</label>
           <input
+            placeholder='Bid Amount'
             id="bid"
             name="bid"
             type="number"
@@ -120,8 +135,8 @@ const BidSubView = () => {
         </div>
 
         <div>
-          <label htmlFor="phone_number">Phone Number:</label>
           <input
+            placeholder='Phone Number'
             id="phone_number"
             name="phone_number"
             type="tel"
@@ -141,9 +156,10 @@ const BidSubView = () => {
             padding: '10px', 
             border: 'none', 
             borderRadius: '4px', 
-            cursor: 'pointer' 
+            cursor: 'pointer', 
+            color: 'white'
           }}
-          className='bg-accent text-base-100'
+          className='bg-accent text-base-100 font-medium'
         >
           {submitStatus === 'submitting' ? 'Submitting...' : 'Submit Bid'}
         </button>
