@@ -100,9 +100,9 @@ const BidViewView = () => {
     <div className=''>
       <Header />
       <div className='border border-base-100 rounded-lg mt-16 p-8'>
-      <h1 className='text-base-100 text-semibold text-xl text-left mb-2'>Review bids for {id}</h1>
+      <h1 className='text-base-100 font-semibold text-xl text-left mb-2'>Review bids for {id}</h1>
 
-      <div className="flex flex-row gap-2 bg-primary space-between rounded-lg">
+      <div className="flex flex-col gap-2 bg-primary space-between rounded-lg">
         
         <div className='max-w-lg max-h-lg rounded-lg overflow-hidden'>
         {bidData[0]?.image_url && (
@@ -121,16 +121,14 @@ const BidViewView = () => {
   </div>
 )}
         </div>
-        <div className="flex flex-col text-base-100">
-          <div className="flex flex-row gap-2">Shipment Company: <div className="font-bold">{bidData[0].shipment_company_name}</div></div>
-          <div className="flex flex-row gap-2">Rural Area: <div className="font-bold">{bidData[0].rural_area}</div></div>
-          <div className="flex flex-row gap-2">Vehicle Size: <div className="font-bold">{bidData[0].vehicle_size}</div></div>
-          <div className="flex flex-row gap-2">Deliver By: <div className="font-bold">{bidData[0].deliver_by_date}</div></div>
-        </div>
+          <div className="flex flex-row gap-2 text-base-100">Shipment Company: {bidData[0].shipment_company_name}</div>
+          <div className="flex flex-row gap-2 text-base-100">Delivery Area: {bidData[0].rural_area}</div>
+          <div className="flex flex-row gap-2 text-base-100">Vehicle Size: {bidData[0].vehicle_size}</div>
+          <div className="flex flex-row gap-2 text-base-100">Deliver By: {bidData[0].deliver_by_date}</div>
       </div>
       <div className='divider divider-accent'></div>
       <div className="mt-8">
-        <h2 className="text-xl font-bold text-base-100 mb-4">Received Bids</h2>
+        <h2 className="text-xl font-semibold text-base-100 mb-4">Received Bids</h2>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
@@ -161,7 +159,7 @@ const BidViewView = () => {
                     >
                       {bid.status === 'selected'
                         ? 'Selected'
-                        : sending && selectedBid?.id === bid.id
+                        : sending && selectedBid?.id === bid.bid_id
                         ? 'Sending...'
                         : 'Select Bid'}
                     </button>

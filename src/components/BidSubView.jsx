@@ -98,10 +98,10 @@ const BidSubView = () => {
   </div>
 )}
               <div className="flex flex-col text-base-100">
-          <div className="flex flex-row gap-2">Shipment Company: <div className="font-bold">{shipment.company_name}</div></div>
-          <div className="flex flex-row gap-2">Delivery Area: <div className="font-bold">{shipment.rural_area}</div></div>
-          <div className="flex flex-row gap-2">Vehicle Size: <div className="font-bold">{shipment.vehicle_size}</div></div>
-          <div className="flex flex-row gap-2">Deliver By: <div className="font-bold">{shipment.deliver_by_date}</div></div>
+          <div className="flex flex-row gap-2">Shipment Company: {shipment.company_name}</div>
+          <div className="flex flex-row gap-2">Delivery Area: {shipment.rural_area}</div>
+          <div className="flex flex-row gap-2">Vehicle Size: {shipment.vehicle_size}</div>
+          <div className="flex flex-row gap-2">Deliver By: {shipment.deliver_by_date}</div>
         </div>
         <div className="divider divider-neutral"></div>
       <h2 className='text-left'>Enter Bid Below</h2>

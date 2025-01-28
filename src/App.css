@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 body {
-  background-color: white;
+  background-color: #FCFCFD;
+}
+
+.headerBackground {
+  background-color: #FCFCFD;
 }
 #root {
   max-width: 1280px;
