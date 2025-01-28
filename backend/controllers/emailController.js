@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendConfirmationEmail = async (req, res) => {
-  const { to, deliveryId, contactName } = req.body;
+  const { to, deliveryId, contactName, authCode } = req.body;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -18,8 +18,11 @@ const sendConfirmationEmail = async (req, res) => {
     html: `
       <h1>Hello ${contactName}!</h1>
       <p>Your new shipment has been created successfully.</p>
+      <p>Your secure authentication code is: <strong>${authCode}</strong></p>
+      <p>This code will expire in 24 hours.</p>
       <p>You can view and track your delivery at:</p>
       <p><a href="http://localhost:5173/FinalMile/Delivery/${deliveryId}/BidsView">http://localhost:5173/FinalMile/Delivery/${deliveryId}/BidsView</a></p>
+      <p>You will need to enter your authentication code to access the delivery details.</p>
       <p>Thank you for choosing our service!</p>
     `
   };

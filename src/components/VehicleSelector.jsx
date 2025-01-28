@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Car, Truck, Bus, Caravan } from 'lucide-react'
+import { Truck, Car, Flatbed, Van } from '../assets/icons';
+
 
 const VehicleSelector = ({ setVehicleSize }) => {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -35,7 +36,7 @@ const VehicleSelector = ({ setVehicleSize }) => {
           onClick={() => handleVehicleSelect('Car')}
         >
           <span className="flex flex-col items-center gap-2">
-            <Car color={getIconColor('Car')} />
+            <img src={Car} alt="Car" className="w-6 h-6" />
             <span className={getTextColor('Car')}>Car</span>
           </span>
         </button>
@@ -46,7 +47,7 @@ const VehicleSelector = ({ setVehicleSize }) => {
           onClick={() => handleVehicleSelect('Pickup')}
         >
           <span className="flex flex-col items-center gap-2">
-            <Truck color={getIconColor('Pickup')} />
+            <img src={Truck} alt="Pickup" className="w-6 h-6" />
             <span className={getTextColor('Pickup')}>Pickup</span>
           </span>
         </button>
@@ -57,7 +58,7 @@ const VehicleSelector = ({ setVehicleSize }) => {
           onClick={() => handleVehicleSelect('Van')}
         >
           <span className="flex flex-col items-center gap-2">
-            <Bus color={getIconColor('Van')} />
+            <img src={Van} alt="Van" className="w-6 h-6" />
             <span className={getTextColor('Van')}>Van</span>
           </span>
         </button>
@@ -68,7 +69,7 @@ const VehicleSelector = ({ setVehicleSize }) => {
           onClick={() => handleVehicleSelect('Flatbed')}
         >
           <span className="flex flex-col items-center gap-2">
-            <Caravan color={getIconColor('Flatbed')} />
+            <img src={Flatbed} alt="Flatbed" className="w-6 h-6" />
             <span className={getTextColor('Flatbed')}>Flatbed</span>
           </span>
         </button>

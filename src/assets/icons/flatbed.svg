@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="70" height="70" viewBox="0 0 70 70">
+  <defs>
+    <style>
+      .cls-1 {
+        clip-path: url(#clip-Artboard_67);
+      }
+
+      .cls-2, .cls-3 {
+        fill: none;
+        stroke: #3a4150;
+        stroke-linejoin: round;
+        stroke-width: 2px;
+      }
+
+      .cls-3 {
+        stroke-linecap: round;
+      }
+    </style>
+    <clipPath id="clip-Artboard_67">
+      <rect width="70" height="70"/>
+    </clipPath>
+  </defs>
+  <g id="Artboard_67" data-name="Artboard – 67" class="cls-1">
+    <g id="Group_263" data-name="Group 263" transform="translate(0 -298)">
+      <rect id="Rectangle_614" data-name="Rectangle 614" class="cls-2" width="36" height="27" transform="translate(7 312)"/>
+      <line id="Line_97" data-name="Line 97" class="cls-2" x1="28" transform="translate(21 349)"/>
+      <path id="Path_155" data-name="Path 155" class="cls-2" d="M43,324h9.03a3,3,0,0,1,2.73,1.75L59,335l2.8,2.1a3,3,0,0,1,1.2,2.4V347a2.006,2.006,0,0,1-2,2H59"/>
+      <path id="Path_156" data-name="Path 156" class="cls-2" d="M55.79,327H46v8H59"/>
+      <circle id="Ellipse_148" data-name="Ellipse 148" class="cls-2" cx="5" cy="5" r="5" transform="translate(11 344)"/>
+      <circle id="Ellipse_149" data-name="Ellipse 149" class="cls-2" cx="5" cy="5" r="5" transform="translate(49 344)"/>
+      <line id="Line_98" data-name="Line 98" class="cls-3" x2="2.94" transform="translate(60 340)"/>
+      <path id="Path_157" data-name="Path 157" class="cls-2" d="M11,349H9a2.006,2.006,0,0,1-2-2v-8"/>
+    </g>
+  </g>
+</svg>

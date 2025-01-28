@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import { useNavigate } from 'react-router-dom'  // Add this import
 import '../App.css'
 import Header from './Header.jsx'
 import VehicleSelector from './VehicleSelector.jsx'
 import ImageUploader from './ImageUploader.jsx'
 import { supabase } from '../../supabaseClient.js'
 import Lightbox from './Lightbox';
+import DatePicker from './DatePicker.jsx'
+
 
 function App() {
+  const navigate = useNavigate();  // Add this hook
   const [loading, setLoading] = useState(false)
   const [contactName, setContactName] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -20,7 +24,16 @@ function App() {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  const sendEmailNotification = async (recipientEmail, deliveryId) => {
+  const generateAuthCode = () => {
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+  };
+
+  const sendEmailNotification = async (recipientEmail, deliveryId, authCode) => {
     try {
       const response = await fetch('http://localhost:3000/api/send-confirmation-email', {
         method: 'POST',
@@ -30,7 +43,8 @@ function App() {
         body: JSON.stringify({
           to: recipientEmail,
           deliveryId: deliveryId,
-          contactName: contactName
+          contactName: contactName,
+          authCode: authCode,
         }),
       });
 
@@ -50,6 +64,8 @@ function App() {
 
     try {
       // First, upload the image to Storage
+      const authCode = generateAuthCode();
+
       let imageUrl = null
       if (deliveryPhoto && deliveryPhoto.name) {
         const fileExt = deliveryPhoto.name.split('.').pop()
@@ -89,8 +105,23 @@ function App() {
 
       if (shipmentError) throw shipmentError
 
+      const { error: authError } = await supabase
+      .from('shipmentauth')
+      .insert([
+        {
+          shipment_id: shipmentData[0].id,
+          auth_code: authCode,
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hour expiry
+        }
+      ])
+
+      if (authError) {
+        console.error('Auth Error:', authError)
+        throw authError
+      }
+
       // Send confirmation email
-      await sendEmailNotification(email, shipmentData[0].id)
+      await sendEmailNotification(email, shipmentData[0].id, authCode)
 
       // Notify overflow companies using existing Express backend
       const notifyResponse = await fetch('http://localhost:3000/api/notify-overflow-companies', {
@@ -118,7 +149,7 @@ function App() {
       setDeliverByDate('')
       setDeliveryPhoto(null)
 
-      alert('Shipment created successfully!')
+      navigate(`/FinalMile/Delivery/${shipmentData[0].id}/BidsView`)
 
     } catch (error) {
       console.error('Error:', error)
@@ -164,12 +195,10 @@ function App() {
           name='Delivery Area' 
           value={ruralArea} 
           onChange={(e) => setRuralArea(e.target.value)}/>
-        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
-          type='date'  
-          placeholder='Deliver-By Date' 
-          name='Deliver-By Date' 
-          value={deliverByDate} 
-          onChange={(e) => setDeliverByDate(e.target.value)}/>       
+        <DatePicker
+  value={deliverByDate}
+  onChange={(e) => setDeliverByDate(e.target.value)}
+/>      
         <div className="mb-6">
           <h2 className="text-base text-gray-900 font-medium mb-4 text-left">Select Required Vehicle Type</h2>
           <VehicleSelector setVehicleSize={setVehicleSize} />

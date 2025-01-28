@@ -62,7 +62,6 @@ const sendNotifications = async (req, res) => {
         <ul>
           <li>Overflow Company: ${bidderName}</li>
           <li>Contact Phone: ${phoneNumber}</li>
-          <li>Contact Email: ${bidderEmail}</li>
           <li>Bid Amount: $${bidAmount}</li>
         </ul>
 
