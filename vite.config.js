@@ -5,6 +5,11 @@ import svgr from 'vite-plugin-svgr'
 export default defineConfig({
   base: '/FinalMile/',
   plugins: [react(), svgr()],
+  resolve: {
+    alias: {
+      '@': '/src'
+    }
+  },
   server: {
     proxy: {
       '/api': {
