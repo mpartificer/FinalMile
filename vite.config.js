@@ -3,8 +3,14 @@ import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 
 export default defineConfig({
-  base: '/FinalMile/',
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr({
+    svgrOptions: {
+      exportType: 'named',
+      ref: true,
+      svgo: false,
+      titleProp: true,
+    },
+  }),],
   resolve: {
     alias: {
       '@': '/src'
