@@ -196,7 +196,7 @@ const handleAuthSubmit = async (e) => {
     return (
       <div className="min-h-screen bg-white">
         <Header />
-        <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-md border border-gray-200">
+        <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-4 text-gray-900">Enter Authentication Code</h2>
           <p className="text-gray-600 mb-4">
             Please enter the authentication code sent to your email.
