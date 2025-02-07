@@ -16,6 +16,7 @@ const BidSubView = () => {
   const [error, setError] = useState(null);
   const [submitStatus, setSubmitStatus] = useState('');
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     fetchShipment();
@@ -73,31 +74,44 @@ const BidSubView = () => {
     }
   };
 
+  const openLightbox = (index) => {
+    setCurrentImageIndex(index);
+    setIsLightboxOpen(true);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
     <div>
       <Header />
-    <div className="mt-16 p-8 max-w-lg bg-primary rounded-xl text-base-100 shadow-lg">
-      <h1 className='text-xl text-gray-900 font-semibold mb-2 text-left'>Submit Bid for Shipment #{id}</h1>
-      
-      {shipment?.image_url && (
-  <div style={{ marginBottom: '20px' }}>
-    <img 
-      src={shipment.image_url} 
-      alt="Shipment"
-      style={{ width: '100%', borderRadius: '4px', cursor: 'pointer' }}
-      onClick={() => setIsLightboxOpen(true)}
-    />
-    <Lightbox
-      isOpen={isLightboxOpen}
-      onClose={() => setIsLightboxOpen(false)}
-      imageUrl={shipment.image_url}
-    />
-  </div>
-)}
-              <div className="flex flex-col text-base-100">
+      <div className="mt-16 p-8 max-w-lg bg-primary rounded-xl text-base-100 shadow-lg">
+        <h1 className='text-xl text-gray-900 font-semibold mb-2 text-left'>Submit Bid for Shipment #{id}</h1>
+        
+        {shipment?.image_urls && shipment.image_urls.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            {shipment.image_urls.map((url, index) => (
+              <div key={index} className="relative">
+                <img 
+                  src={url} 
+                  alt={`Shipment ${index + 1}`}
+                  className="w-full h-48 object-cover rounded-lg cursor-pointer"
+                  onClick={() => openLightbox(index)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+        
+        <Lightbox
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          images={shipment?.image_urls || []}
+          currentIndex={currentImageIndex}
+          setCurrentIndex={setCurrentImageIndex}
+        />
+
+        <div className="flex flex-col text-base-100">
           <div className="flex flex-row gap-2">Shipment Company: {shipment.company_name}</div>
           <div className="flex flex-row gap-2">Delivery Area: {shipment.rural_area}</div>
           <div className="flex flex-row gap-2">Vehicle Size: {shipment.vehicle_size}</div>

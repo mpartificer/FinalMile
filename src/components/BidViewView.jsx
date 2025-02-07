@@ -18,7 +18,13 @@ const BidViewView = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authCode, setAuthCode] = useState('');
   const [showAuthPrompt, setShowAuthPrompt] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const openLightbox = (index) => {
+    setCurrentImageIndex(index);
+    setIsLightboxOpen(true);
+  };
+  
   const verifyAuthCode = async (code) => {
     try {
       setLoading(true);
@@ -258,21 +264,27 @@ const handleAuthSubmit = async (e) => {
 
         <div className="flex flex-col gap-2 bg-primary space-between rounded-lg">
           <div className='max-w-lg max-h-lg rounded-lg overflow-hidden'>
-            {displayData?.image_url && (
-              <div style={{ marginBottom: '20px' }}>
-                <img 
-                  src={displayData.image_url} 
-                  alt="Shipment"
-                  style={{ width: '100%', borderRadius: '4px', cursor: 'pointer' }}
-                  onClick={() => setIsLightboxOpen(true)}
-                />
-                <Lightbox
-                  isOpen={isLightboxOpen}
-                  onClose={() => setIsLightboxOpen(false)}
-                  imageUrl={displayData.image_url}
-                />
+            {displayData?.image_urls && displayData.image_urls.length > 0 && (
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                {displayData.image_urls.map((url, index) => (
+                  <div key={index} className="relative">
+                    <img 
+                      src={url} 
+                      alt={`Shipment ${index + 1}`}
+                      className="w-full h-48 object-cover rounded-lg cursor-pointer"
+                      onClick={() => openLightbox(index)}
+                    />
+                  </div>
+                ))}
               </div>
             )}
+            <Lightbox
+              isOpen={isLightboxOpen}
+              onClose={() => setIsLightboxOpen(false)}
+              images={displayData?.image_urls || []}
+              currentIndex={currentImageIndex}
+              setCurrentIndex={setCurrentImageIndex}
+            />
           </div>
           <div className="flex flex-row gap-2 text-base-100">Shipment Company: {displayData.shipment_company_name || displayData.company_name}</div>
           <div className="flex flex-row gap-2 text-base-100">Delivery Area: {displayData.rural_area}</div>

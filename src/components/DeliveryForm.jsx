@@ -22,7 +22,7 @@ function App() {
   const [deliverByDate, setDeliverByDate] = useState('');
   const [deliveryPhoto, setDeliveryPhoto] = useState(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [deliveryPhotos, setDeliveryPhotos] = useState([]);
 
   const generateAuthCode = () => {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -66,25 +66,28 @@ function App() {
       // First, upload the image to Storage
       const authCode = generateAuthCode();
 
-      let imageUrl = null
-      if (deliveryPhoto && deliveryPhoto.name) {
-        const fileExt = deliveryPhoto.name.split('.').pop()
-        const fileName = `${uuidv4()}.${fileExt}`
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('Manifests')
-          .upload(fileName, deliveryPhoto)
+      let imageUrls = []
 
-        if (uploadError) {
-          throw uploadError
+      if (deliveryPhotos.length > 0) {
+        for (const photo of deliveryPhotos) {
+            const fileExt = photo.name.split('.').pop()
+            const fileName = `${uuidv4()}.${fileExt}`
+            
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('Manifests')
+                .upload(fileName, photo)
+
+            if (uploadError) {
+                throw uploadError
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('Manifests')
+                .getPublicUrl(fileName)
+
+            imageUrls.push(publicUrl)
         }
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('Manifests')
-          .getPublicUrl(fileName)
-
-        imageUrl = publicUrl
-      }
+    }
 
       // Then create the shipment record
       const { data: shipmentData, error: shipmentError } = await supabase
@@ -98,7 +101,7 @@ function App() {
             vehicle_size: vehicleSize,
             rural_area: ruralArea,
             deliver_by_date: deliverByDate,
-            image_url: imageUrl
+            image_urls: imageUrls
           }
         ])
         .select()
@@ -147,7 +150,7 @@ function App() {
       setVehicleSize(null)
       setRuralArea('')
       setDeliverByDate('')
-      setDeliveryPhoto(null)
+      setDeliveryPhotos([])
 
       navigate(`/FinalMile/Delivery/${shipmentData[0].id}/BidsView`)
 
@@ -204,11 +207,11 @@ function App() {
           <VehicleSelector setVehicleSize={setVehicleSize} />
         </div>
         <div className="mb-6">
-          <h2 className="text-base text-gray-900 font-medium mb-4 text-left">Upload Manifest Image</h2>
-          <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-            <ImageUploader setDeliveryPhoto={setDeliveryPhoto} deliveryPhoto={deliveryPhoto} />
-          </div>
-        </div>             
+            <h2 className="text-base text-gray-900 font-medium mb-4 text-left">Upload Manifest Images</h2>
+            <div className="border-2 border-dashed border-gray-200 rounded-lg p-8">
+                <ImageUploader setDeliveryPhotos={setDeliveryPhotos} deliveryPhotos={deliveryPhotos} />
+            </div>
+        </div>           
         <button type="submit" 
           className='w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors'
           disabled={loading}>
