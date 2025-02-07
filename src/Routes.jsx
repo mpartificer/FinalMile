@@ -5,7 +5,7 @@ import BidViewView from "./components/BidViewView.jsx"
 
 const router = createBrowserRouter([
     {
-        path: "/FinalMile/",
+        path: "/",
         element: <DeliveryForm />,
     },
     {
