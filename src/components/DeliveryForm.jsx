@@ -162,34 +162,34 @@ function App() {
   return (
 <div className="bg-white min-h-screen">
       <Header />
-      <form className='max-w-xl mx-auto p-8 bg-white rounded-lg shadow-md mt-16 border border-neutral' onSubmit={handleNewDelivery}>
+      <form className='max-w-xl mx-auto p-8 bg-white rounded-lg shadow-lg mt-16' onSubmit={handleNewDelivery}>
         <h1 className="text-xl text-gray-900 font-semibold mb-2 text-left">Submit Delivery Overflow</h1>
         <p className="text-gray-600 mb-6 text-left">Upload your manifest and provide details for bidding</p>
-        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 mb-4 border border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:bg-white hover:bg-white'
           type='text' 
           placeholder='Contact Name' 
           name='Contact Name' 
           value={contactName} 
           onChange={(e) => setContactName(e.target.value)}/>
-        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border mb-4 border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:bg-white hover:bg-white'
           type='text'  
           placeholder='Company Name' 
           name='Company Name' 
           value={companyName} 
           onChange={(e) => setCompanyName(e.target.value)}/>
-        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border mb-4 border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:bg-white hover:bg-white'
           type='tel'  
           placeholder='Phone Number' 
           name='Phone Number' 
           value={phoneNumber} 
           onChange={(e) => setPhoneNumber(e.target.value)}/>
-        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border mb-4 border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:bg-white hover:bg-white'
           type='email'  
           placeholder='Email' 
           name='Email' 
           value={email} 
           onChange={(e) => setEmail(e.target.value)}/>
-        <input className='bg-white w-full p-3 border border-gray-200 rounded-lg mb-4 placeholder:text-gray-400'
+        <input className='bg-white w-full p-3 border mb-4 border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 focus:bg-white hover:bg-white'
           type='text'  
           placeholder='Delivery Area' 
           name='Delivery Area' 
@@ -214,6 +214,17 @@ function App() {
           disabled={loading}>
           {loading ? 'Loading...' : 'Submit for Bidding'}
         </button>
+        <style>
+          {`
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover,
+            input:-webkit-autofill:focus {
+              -webkit-box-shadow: 0 0 0 30px white inset !important;
+              -webkit-text-fill-color: #111827 !important;
+              caret-color: #111827;
+            }
+          `}
+        </style>
       </form>
     </div>
   )
