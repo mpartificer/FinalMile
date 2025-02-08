@@ -36,6 +36,38 @@ const sendConfirmationEmail = async (req, res) => {
   }
 };
 
+const sendBidNotificationEmail = async (req, res) => {
+  const { to, shipmentId, bidAmount, bidderName, bidderCompany, bidderPhone } = req.body;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: to,
+    subject: 'New Bid Received - FinalMile Delivery',
+    html: `
+      <h1>New Bid Notification</h1>
+      <p>You have received a new bid for your shipment #${shipmentId}.</p>
+      <h2>Bid Details:</h2>
+      <ul>
+        <li>Bid Amount: $${bidAmount}</li>
+        <li>Bidder Name: ${bidderName}</li>
+        <li>Bidder Company: ${bidderCompany}</li>
+        <li>Contact Phone: ${bidderPhone}</li>
+      </ul>
+      <p>You can view all bids for this shipment at:</p>
+      <p><a href="http://localhost:5173/FinalMile/Delivery/${shipmentId}/BidsView">http://localhost:5173/FinalMile/Delivery/${shipmentId}/BidsView</a></p>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: 'Bid notification email sent successfully' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Failed to send bid notification email' });
+  }
+};
+
 module.exports = {
-  sendConfirmationEmail
+  sendConfirmationEmail,
+  sendBidNotificationEmail
 };

@@ -40,6 +40,31 @@ const BidSubView = () => {
     }
   };
 
+  const sendEmailNotification = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/send-bid-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: shipment.email,  // Use the email directly from shipment data
+          shipmentId: id,
+          bidAmount: formData.bid,
+          bidderName: formData.name,
+          bidderCompany: formData.company_name,
+          bidderPhone: formData.phone_number
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to send email notification');
+      }
+    } catch (err) {
+      console.error('Error sending email notification:', err);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -66,6 +91,10 @@ const BidSubView = () => {
         ]);
 
       if (error) throw error;
+
+      if (shipment?.email) {
+        await sendEmailNotification();
+      }
       
       setSubmitStatus('success');
       setFormData({ name: '', bid: '', company_name: '', phone_number: '' });
