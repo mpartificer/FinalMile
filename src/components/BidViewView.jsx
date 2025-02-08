@@ -262,30 +262,29 @@ const handleAuthSubmit = async (e) => {
       <div className='border border-base-100 rounded-lg mt-16 p-8'>
         <h1 className='text-base-100 font-semibold text-xl text-left mb-2'>Review bids for {id}</h1>
 
-        <div className="flex flex-col gap-2 bg-primary space-between rounded-lg">
-          <div className='max-w-lg max-h-lg rounded-lg overflow-hidden'>
-            {displayData?.image_urls && displayData.image_urls.length > 0 && (
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {displayData.image_urls.map((url, index) => (
-                  <div key={index} className="relative">
-                    <img 
-                      src={url} 
-                      alt={`Shipment ${index + 1}`}
-                      className="w-full h-48 object-cover rounded-lg cursor-pointer"
-                      onClick={() => openLightbox(index)}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-            <Lightbox
-              isOpen={isLightboxOpen}
-              onClose={() => setIsLightboxOpen(false)}
-              images={displayData?.image_urls || []}
-              currentIndex={currentImageIndex}
-              setCurrentIndex={setCurrentImageIndex}
-            />
-          </div>
+        <div className="flex flex-col gap-2 bg-primary space-between rounded-lg p-6">
+          {displayData?.image_urls && displayData.image_urls.length > 0 && (
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {displayData.image_urls.map((url, index) => (
+                <div key={index} className="relative">
+                  <img 
+                    src={url} 
+                    alt={`Shipment ${index + 1}`}
+                    className="w-full h-48 object-cover rounded-lg cursor-pointer"
+                    onClick={() => openLightbox(index)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          
+          <Lightbox
+            isOpen={isLightboxOpen}
+            onClose={() => setIsLightboxOpen(false)}
+            images={displayData?.image_urls || []}
+            currentIndex={currentImageIndex}
+            setCurrentIndex={setCurrentImageIndex}
+          />
           <div className="flex flex-row gap-2 text-base-100">Shipment Company: {displayData.shipment_company_name || displayData.company_name}</div>
           <div className="flex flex-row gap-2 text-base-100">Delivery Area: {displayData.rural_area}</div>
           <div className="flex flex-row gap-2 text-base-100">Vehicle Size: {displayData.vehicle_size}</div>
