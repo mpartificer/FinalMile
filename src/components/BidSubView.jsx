@@ -60,14 +60,15 @@ const BidSubView = () => {
             name: formData.name,
             bid: parseFloat(formData.bid),
             phone_number: formData.phone_number,
-            shipment_id: id
+            shipment_id: id,
+            company_name: formData.company_name
           }
         ]);
 
       if (error) throw error;
       
       setSubmitStatus('success');
-      setFormData({ name: '', bid: '', phone_number: '' });
+      setFormData({ name: '', bid: '', company_name: '', phone_number: '' });
     } catch (err) {
       setSubmitStatus('error');
       console.error(err);
@@ -126,6 +127,19 @@ const BidSubView = () => {
             placeholder='Name'
             name="name"
             value={formData.name}
+            onChange={handleInputChange}
+            required
+            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            className='bg-secondary rounded-md'
+          />
+        </div>
+
+        <div>
+          <input
+            id="company_name"
+            placeholder='Company Name'
+            name="company_name"
+            value={formData.company_name}
             onChange={handleInputChange}
             required
             style={{ width: '100%', padding: '8px', marginTop: '5px' }}
