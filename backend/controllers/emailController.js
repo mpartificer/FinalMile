@@ -21,7 +21,7 @@ const sendConfirmationEmail = async (req, res) => {
       <p>Your secure authentication code is: <strong>${authCode}</strong></p>
       <p>This code will expire in 24 hours.</p>
       <p>You can view and track your delivery at:</p>
-      <p><a href="http://localhost:5173/FinalMile/Delivery/${deliveryId}/BidsView">http://localhost:5173/FinalMile/Delivery/${deliveryId}/BidsView</a></p>
+      <p><a href="https://finalmile.pages.dev/FinalMile/Delivery/${deliveryId}/BidsView">https://finalmile.pages.dev/FinalMile/Delivery/${deliveryId}/BidsView</a></p>
       <p>You will need to enter your authentication code to access the delivery details.</p>
       <p>Thank you for choosing our service!</p>
     `
@@ -54,7 +54,7 @@ const sendBidNotificationEmail = async (req, res) => {
         <li>Contact Phone: ${bidderPhone}</li>
       </ul>
       <p>You can view all bids for this shipment at:</p>
-      <p><a href="http://localhost:5173/FinalMile/Delivery/${shipmentId}/BidsView">http://localhost:5173/FinalMile/Delivery/${shipmentId}/BidsView</a></p>
+      <p><a href="https://finalmile.pages.dev/FinalMile/Delivery/${shipmentId}/BidsView">https://finalmile.pages.dev/FinalMile/Delivery/${shipmentId}/BidsView</a></p>
     `
   };
 

@@ -70,7 +70,7 @@ const notifyOverflowCompanies = async (req, res) => {
 
       // Send SMS to each company
       const notificationPromises = companies.map(company => {
-        const message = `New shipment available for bidding! View and bid here: http://localhost:5173/FinalMile/Delivery/${shipmentId}/Bidding`;
+        const message = `New shipment available for bidding! View and bid here: https://finalmile.pages.dev/FinalMile/Delivery/${shipmentId}/Bidding`;
         
         return twilioClient.messages.create({
           body: message,
