@@ -23,6 +23,8 @@ function App() {
   const [deliveryPhoto, setDeliveryPhoto] = useState(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [deliveryPhotos, setDeliveryPhotos] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 
   const generateAuthCode = () => {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -35,7 +37,7 @@ function App() {
 
   const sendEmailNotification = async (recipientEmail, deliveryId, authCode) => {
     try {
-      const response = await fetch('http://localhost:3000/api/send-confirmation-email', {
+      const response = await fetch(`${API_URL}/api/send-confirmation-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +129,7 @@ function App() {
       await sendEmailNotification(email, shipmentData[0].id, authCode)
 
       // Notify overflow companies using existing Express backend
-      const notifyResponse = await fetch('http://localhost:3000/api/notify-overflow-companies', {
+      const notifyResponse = await fetch(`${API_URL}/api/notify-overflow-companies`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
