@@ -17,6 +17,8 @@ const BidSubView = () => {
   const [submitStatus, setSubmitStatus] = useState('');
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 
   useEffect(() => {
     fetchShipment();
@@ -42,7 +44,7 @@ const BidSubView = () => {
 
   const sendEmailNotification = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/send-bid-notification', {
+      const response = await fetch(`${API_URL}/api/send-bid-notification`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -19,6 +19,8 @@ const BidViewView = () => {
   const [authCode, setAuthCode] = useState('');
   const [showAuthPrompt, setShowAuthPrompt] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 
   const openLightbox = (index) => {
     setCurrentImageIndex(index);
@@ -150,7 +152,7 @@ const handleAuthSubmit = async (e) => {
       
       const username = import.meta.env.VITE_TWILIO_ACCOUNT_SID;
   
-      const response = await fetch('http://localhost:3000/api/send-notifications', {
+      const response = await fetch(`{${API_URL}}/api/send-notifications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
