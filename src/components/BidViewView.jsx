@@ -80,8 +80,6 @@ const BidViewView = () => {
 
   const ImageGrid = ({ imageUrls }) => {
     const [imageStatuses, setImageStatuses] = useState({});
-    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
     const handleImageError = (url) => {
       console.error(`Failed to load image: ${url}`);
@@ -202,7 +200,8 @@ const handleAuthSubmit = async (e) => {
   }, [id, isAuthenticated]);
 
   useEffect(() => {
-    if (displayData?.image_urls) {
+    if (displayData) {
+      console.log('Display data loaded:', displayData);
       console.log('Image URLs:', displayData.image_urls);
     }
   }, [displayData]);
@@ -336,15 +335,24 @@ const handleAuthSubmit = async (e) => {
         <h1 className='text-base-100 font-semibold text-xl text-left mb-2'>Review bids for {id}</h1>
 
         <div className="flex flex-col gap-2 bg-primary space-between rounded-lg p-6">
-            {displayData?.image_urls && <ImageGrid imageUrls={displayData.image_urls} />}
-          
-          <Lightbox
-            isOpen={isLightboxOpen}
-            onClose={() => setIsLightboxOpen(false)}
-            images={displayData?.image_urls || []}
-            currentIndex={currentImageIndex}
-            setCurrentIndex={setCurrentImageIndex}
-          />
+        {displayData?.image_urls && (
+  <>
+    <ImageGrid 
+      imageUrls={displayData.image_urls}
+      onImageClick={(index) => {
+        setCurrentImageIndex(index);
+        setIsLightboxOpen(true);
+      }}
+    />
+    <Lightbox
+      isOpen={isLightboxOpen}
+      onClose={() => setIsLightboxOpen(false)}
+      images={displayData.image_urls}
+      currentIndex={currentImageIndex}
+      setCurrentIndex={setCurrentImageIndex}
+    />
+  </>
+)}
           <div className="flex flex-row gap-2 text-base-100">Shipment Company: {displayData.shipment_company_name || displayData.company_name}</div>
           <div className="flex flex-row gap-2 text-base-100">Delivery Area: {displayData.rural_area}</div>
           <div className="flex flex-row gap-2 text-base-100">Vehicle Size: {displayData.vehicle_size}</div>
