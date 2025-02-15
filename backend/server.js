@@ -16,7 +16,7 @@ console.log("we made it to the server")
 // Enable CORS for your frontend URL
 app.use(cors({
   origin: ['http://localhost:5173',
-    'https://7dde597d.finalmile.pages.dev/'
+    'https://7dde597d.finalmile.pages.dev'
   ], // Adjust this to match your Vite frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
