@@ -7,6 +7,18 @@ import Lightbox from './Lightbox.jsx';
 const ImageGrid = memo(({ imageUrls, onImageClick }) => {
   const [imageStatuses, setImageStatuses] = useState({});
 
+  const validImageUrls = Array.isArray(imageUrls) ? imageUrls : [];
+
+  useEffect(() => {
+    if (validImageUrls.length > 0) {
+      setImageStatuses({});
+    }
+  }, [validImageUrls]);
+
+  if (!validImageUrls.length) {
+    return null;
+  }
+
   const handleImageError = (url) => {
     console.error(`Failed to load image: ${url}`);
     setImageStatuses(prev => ({
@@ -165,41 +177,57 @@ const handleAuthSubmit = async (e) => {
   await verifyAuthCode(normalizedCode);
 };
 
-  const fetchData = async () => {
-    if (!isAuthenticated) {
-      console.log('Not authenticated, skipping fetch');
-      return;
+const fetchData = async () => {
+  if (!isAuthenticated) {
+    console.log('Not authenticated, skipping fetch');
+    return;
+  }
+
+  try {
+    // First, try to fetch bids from the view
+    const { data: bidsData, error: bidsError } = await supabase
+      .from('bids_with_shipments_view')
+      .select('*')
+      .eq('shipment_id', id);
+
+    if (bidsError) throw bidsError;
+    
+    // If we have bids, we need to separately fetch the shipment for images
+    if (bidsData && bidsData.length > 0) {
+      // Fetch the shipment data for images
+      const { data: shipmentInfo, error: shipmentError } = await supabase
+        .from('Shipments')
+        .select('image_urls')
+        .eq('id', id)
+        .single();
+
+      if (shipmentError) throw shipmentError;
+
+      // Combine the data
+      const combinedData = bidsData.map(bid => ({
+        ...bid,
+        image_urls: shipmentInfo?.image_urls || []
+      }));
+
+      setBidData(combinedData);
+    } else {
+      // If no bids, fetch the shipment information directly
+      const { data: shipmentInfo, error: shipmentError } = await supabase
+        .from('Shipments')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (shipmentError) throw shipmentError;
+      setShipmentData(shipmentInfo);
     }
-
-    try {
-      // First, try to fetch bids from the view
-      const { data: bidsData, error: bidsError } = await supabase
-        .from('bids_with_shipments_view')
-        .select('*, image_urls')
-        .eq('shipment_id', id);
-
-      if (bidsError) throw bidsError;
-      setBidData(bidsData || []);
-
-      // If there are no bids, fetch the shipment information directly
-      if (!bidsData || bidsData.length === 0) {
-        const { data: shipmentInfo, error: shipmentError } = await supabase
-          .from('Shipments')
-          .select('*, image_urls')
-          .eq('id', id)
-          .single();
-
-        if (shipmentError) throw shipmentError;
-        setShipmentData(shipmentInfo);
-      }
-    } catch (err) {
-      setError('Error fetching data: ' + err.message);
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  } catch (err) {
+    setError('Error fetching data: ' + err.message);
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
   useEffect(() => {
     if (isAuthenticated) {
     fetchData();
