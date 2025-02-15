@@ -78,6 +78,71 @@ const BidViewView = () => {
     }
   };
 
+  const ImageGrid = ({ imageUrls }) => {
+    const [imageStatuses, setImageStatuses] = useState({});
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+    const handleImageError = (url) => {
+      console.error(`Failed to load image: ${url}`);
+      setImageStatuses(prev => ({
+        ...prev,
+        [url]: 'error'
+      }));
+    };
+  
+    const handleImageLoad = (url) => {
+      setImageStatuses(prev => ({
+        ...prev,
+        [url]: 'loaded'
+      }));
+    };
+  
+    useEffect(() => {
+      // Reset image statuses when URLs change
+      setImageStatuses({});
+    }, [imageUrls]);
+  
+    if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
+      return (
+        <div className="text-gray-500 italic">
+          No images available for this shipment
+        </div>
+      );
+    }
+  
+    return (
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        {imageUrls.map((url, index) => (
+          <div key={index} className="relative">
+            {imageStatuses[url] === 'error' ? (
+              <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                Failed to load image
+              </div>
+            ) : (
+              <>
+                <img 
+                  src={url} 
+                  alt={`Shipment ${index + 1}`}
+                  className="w-full h-48 object-cover rounded-lg cursor-pointer"
+                  onError={() => handleImageError(url)}
+                  onLoad={() => handleImageLoad(url)}
+                  onClick={() => {
+                    setCurrentImageIndex(index);
+                    setIsLightboxOpen(true);
+                  }}
+                />
+                {!imageStatuses[url] && (
+                  <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
+                )}
+              </>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+  
 const handleAuthSubmit = async (e) => {
   e.preventDefault();
   setError(null);
@@ -135,6 +200,12 @@ const handleAuthSubmit = async (e) => {
     fetchData();
     }
   }, [id, isAuthenticated]);
+
+  useEffect(() => {
+    if (displayData?.image_urls) {
+      console.log('Image URLs:', displayData.image_urls);
+    }
+  }, [displayData]);
 
   useEffect(() => {
     if (showSuccessAlert) {
@@ -265,20 +336,7 @@ const handleAuthSubmit = async (e) => {
         <h1 className='text-base-100 font-semibold text-xl text-left mb-2'>Review bids for {id}</h1>
 
         <div className="flex flex-col gap-2 bg-primary space-between rounded-lg p-6">
-          {displayData?.image_urls && displayData.image_urls.length > 0 && (
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              {displayData.image_urls.map((url, index) => (
-                <div key={index} className="relative">
-                  <img 
-                    src={url} 
-                    alt={`Shipment ${index + 1}`}
-                    className="w-full h-48 object-cover rounded-lg cursor-pointer"
-                    onClick={() => openLightbox(index)}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+            {displayData?.image_urls && <ImageGrid imageUrls={displayData.image_urls} />}
           
           <Lightbox
             isOpen={isLightboxOpen}
