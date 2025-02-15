@@ -175,7 +175,7 @@ const handleAuthSubmit = async (e) => {
       // First, try to fetch bids from the view
       const { data: bidsData, error: bidsError } = await supabase
         .from('bids_with_shipments_view')
-        .select('*')
+        .select('*, image_urls')
         .eq('shipment_id', id);
 
       if (bidsError) throw bidsError;
@@ -185,7 +185,7 @@ const handleAuthSubmit = async (e) => {
       if (!bidsData || bidsData.length === 0) {
         const { data: shipmentInfo, error: shipmentError } = await supabase
           .from('Shipments')
-          .select('*')
+          .select('*, image_urls')
           .eq('id', id)
           .single();
 
@@ -208,10 +208,12 @@ const handleAuthSubmit = async (e) => {
 
   useEffect(() => {
     if (displayData) {
-      console.log('Display data loaded:', displayData);
-      console.log('Image URLs:', displayData.image_urls);
+      console.log('Full display data:', displayData);
+    console.log('Image URLs type:', typeof displayData.image_urls);
+    console.log('Bid Data:', bidData);
+    console.log('Shipment Data:', shipmentData);
     }
-  }, [displayData]);
+  }, [displayData, bidData, shipmentData]);
 
   useEffect(() => {
     if (showSuccessAlert) {
