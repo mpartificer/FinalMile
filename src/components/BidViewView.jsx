@@ -4,6 +4,74 @@ import { supabase } from '../../supabaseClient.js';
 import Header from './Header.jsx';
 import Lightbox from './Lightbox.jsx';
 
+const ImageGrid = memo(({ imageUrls, onImageClick }) => {
+  const [imageStatuses, setImageStatuses] = useState({});
+
+  const handleImageError = (url) => {
+    console.error(`Failed to load image: ${url}`);
+    setImageStatuses(prev => ({
+      ...prev,
+      [url]: 'error'
+    }));
+  };
+
+  const handleImageLoad = (url) => {
+    setImageStatuses(prev => ({
+      ...prev,
+      [url]: 'loaded'
+    }));
+  };
+
+  // Reset image statuses when URLs change
+  useEffect(() => {
+    if (imageUrls?.length > 0) {
+      setImageStatuses({});
+    }
+  }, [imageUrls]);
+
+  // Early return if no valid image URLs
+  if (!imageUrls?.length) {
+    return null;
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-4 mb-6">
+      {imageUrls.map((url, index) => (
+        <div key={`image-${index}-${url}`} className="relative">
+          {imageStatuses[url] === 'error' ? (
+            <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+              Failed to load image
+            </div>
+          ) : (
+            <>
+              <img 
+                src={url} 
+                alt={`Shipment ${index + 1}`}
+                className="w-full h-48 object-cover rounded-lg cursor-pointer"
+                onError={() => handleImageError(url)}
+                onLoad={() => handleImageLoad(url)}
+                onClick={() => onImageClick?.(index)}
+              />
+              {!imageStatuses[url] && (
+                <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
+              )}
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+});
+
+// Set display name for debugging
+ImageGrid.displayName = 'ImageGrid';
+
+// Add prop types checking if you're using TypeScript or PropTypes
+ImageGrid.defaultProps = {
+  imageUrls: [],
+  onImageClick: () => {}
+};
+
 const BidViewView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,6 +89,7 @@ const BidViewView = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
+  const displayData = bidData.length > 0 ? bidData[0] : shipmentData;
 
   const openLightbox = (index) => {
     setCurrentImageIndex(index);
@@ -78,68 +147,6 @@ const BidViewView = () => {
     }
   };
 
-  const ImageGrid = ({ imageUrls }) => {
-    const [imageStatuses, setImageStatuses] = useState({});
-  
-    const handleImageError = (url) => {
-      console.error(`Failed to load image: ${url}`);
-      setImageStatuses(prev => ({
-        ...prev,
-        [url]: 'error'
-      }));
-    };
-  
-    const handleImageLoad = (url) => {
-      setImageStatuses(prev => ({
-        ...prev,
-        [url]: 'loaded'
-      }));
-    };
-  
-    useEffect(() => {
-      // Reset image statuses when URLs change
-      setImageStatuses({});
-    }, [imageUrls]);
-  
-    if (!imageUrls || !Array.isArray(imageUrls) || imageUrls.length === 0) {
-      return (
-        <div className="text-gray-500 italic">
-          No images available for this shipment
-        </div>
-      );
-    }
-  
-    return (
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        {imageUrls.map((url, index) => (
-          <div key={index} className="relative">
-            {imageStatuses[url] === 'error' ? (
-              <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
-                Failed to load image
-              </div>
-            ) : (
-              <>
-                <img 
-                  src={url} 
-                  alt={`Shipment ${index + 1}`}
-                  className="w-full h-48 object-cover rounded-lg cursor-pointer"
-                  onError={() => handleImageError(url)}
-                  onLoad={() => handleImageLoad(url)}
-                  onClick={() => {
-                    setCurrentImageIndex(index);
-                    setIsLightboxOpen(true);
-                  }}
-                />
-                {!imageStatuses[url] && (
-                  <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
-                )}
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
   
 const handleAuthSubmit = async (e) => {
   e.preventDefault();
@@ -310,11 +317,9 @@ const handleAuthSubmit = async (e) => {
     </div>
   );
 
-  if (loading) return <div>Loading...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   // Get the display data either from bids or direct shipment
-  const displayData = bidData.length > 0 ? bidData[0] : shipmentData;
 
   if (!displayData) return <div>No shipment found</div>;
 
