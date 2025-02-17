@@ -3,9 +3,12 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '../../supabaseClient.js'
 import Header from './Header.jsx'
 import Lightbox from './Lightbox.jsx';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 const BidSubView = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [shipment, setShipment] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -100,6 +103,11 @@ const BidSubView = () => {
       
       setSubmitStatus('success');
       setFormData({ name: '', bid: '', company_name: '', phone_number: '' });
+
+      setTimeout(() => {
+        navigate('/FinalMile');
+      }, 3000);
+
     } catch (err) {
       setSubmitStatus('error');
       console.error(err);
@@ -224,10 +232,27 @@ const BidSubView = () => {
         </button>
 
         {submitStatus === 'success' && (
-          <p style={{ color: 'green', textAlign: 'center' }}>Bid submitted successfully!</p>
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
+              <div className="w-64 h-64 mx-auto mb-4">
+                <DotLottieReact 
+                  src="../assets/icons/truckanimation.lottie" 
+                  loop 
+                  autoplay 
+                />
+              </div>
+              <p className="text-xl font-medium text-gray-900">
+                Bid submitted successfully!
+              </p>
+              <p className="text-gray-600 mt-2">
+                Redirecting to homepage...
+              </p>
+            </div>
+          </div>
         )}
+        
         {submitStatus === 'error' && (
-          <p style={{ color: 'red', textAlign: 'center' }}>Error submitting bid. Please try again.</p>
+          <p className="text-red-500 text-center mt-4">Error submitting bid. Please try again.</p>
         )}
       </form>
     </div>
