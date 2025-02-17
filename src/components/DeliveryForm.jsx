@@ -8,14 +8,13 @@ import ImageUploader from './ImageUploader.jsx'
 import { supabase } from '../../supabaseClient.js'
 import Lightbox from './Lightbox';
 import DatePicker from './DatePicker.jsx'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import LoadingOverlay from './LoadingOverlay';
 
 
 
 function App() {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const navigate = useNavigate();  // Add this hook
+  const [loading, setLoading] = useState(false)
   const [contactName, setContactName] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
@@ -26,6 +25,7 @@ function App() {
   const [deliveryPhoto, setDeliveryPhoto] = useState(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [deliveryPhotos, setDeliveryPhotos] = useState([]);
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 
@@ -65,6 +65,7 @@ function App() {
 
   const handleNewDelivery = async (e) => {
     e.preventDefault()
+    setShowLoadingOverlay(true);
     setLoading(true)
 
     try {
@@ -147,9 +148,6 @@ function App() {
         throw new Error(errorData.error || 'Failed to notify overflow companies');
       }
 
-      setShowSuccess(true);
-
-
       // Clear the form
       setContactName('')
       setCompanyName('')
@@ -160,14 +158,13 @@ function App() {
       setDeliverByDate('')
       setDeliveryPhotos([])
 
-      setTimeout(() => {
-        navigate(`/FinalMile/Delivery/${shipmentData[0].id}/BidsView`);
-      }, 3000);
+      navigate(`/FinalMile/Delivery/${shipmentData[0].id}/BidsView`)
 
     } catch (error) {
       console.error('Error:', error)
       alert('Error creating shipment: ' + error.message)
     } finally {
+      setShowLoadingOverlay(false);
       setLoading(false)
     }
   }
@@ -175,25 +172,6 @@ function App() {
   return (
 <div className="bg-white min-h-screen">
       <Header />
-      {showSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
-            <div className="w-64 h-64 mx-auto mb-4">
-              <DotLottieReact 
-                src="../assets/icons/truckanimation.lottie" 
-                loop 
-                autoplay 
-              />
-            </div>
-            <p className="text-xl font-medium text-gray-900">
-              Delivery submitted successfully!
-            </p>
-            <p className="text-gray-600 mt-2">
-              Redirecting to bids view...
-            </p>
-          </div>
-        </div>
-      )}
       <form className='max-w-xl mx-auto p-8 bg-white rounded-lg shadow-lg mt-16' onSubmit={handleNewDelivery}>
         <h1 className="text-xl text-gray-900 font-semibold mb-2 text-left">Submit Delivery Overflow</h1>
         <p className="text-gray-600 mb-6 text-left">Upload your manifest and provide details for bidding</p>
@@ -258,6 +236,7 @@ function App() {
           `}
         </style>
       </form>
+      {showLoadingOverlay && <LoadingOverlay message="Submitting delivery request..." />}
     </div>
   )
 }

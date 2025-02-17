@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient.js';
 import Header from './Header.jsx';
 import Lightbox from './Lightbox.jsx';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import LoadingOverlay from './LoadingOverlay.jsx';
 
 
 const ImageGrid = memo(({ imageUrls, onImageClick }) => {
@@ -101,6 +101,7 @@ const BidViewView = () => {
   const [authCode, setAuthCode] = useState('');
   const [showAuthPrompt, setShowAuthPrompt] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   const displayData = bidData.length > 0 ? bidData[0] : shipmentData;
@@ -256,6 +257,7 @@ const fetchData = async () => {
 
   const handleBidSelection = async (bid) => {
     try {
+      setShowLoadingOverlay(true);
       setSending(true);
       setSelectedBid(bid);
       
@@ -305,6 +307,7 @@ const fetchData = async () => {
       console.error('Detailed selection error:', err);
       setError(`Error selecting bid: ${err.message}`);
     } finally {
+      setShowLoadingOverlay(false);
       setSending(false);
     }
   };
@@ -361,23 +364,11 @@ const fetchData = async () => {
     <div className=''>
       <Header />
       {showSuccessAlert && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
-            <div className="w-64 h-64 mx-auto mb-4">
-              <DotLottieReact 
-                src="../assets/icons/truckanimation.lottie" 
-                loop 
-                autoplay 
-              />
-            </div>
-            <p className="text-xl font-medium text-gray-900">
-              Bid selected successfully!
-            </p>
-            <p className="text-gray-600 mt-2">
-              Contact information has been sent to your email. 
-              Redirecting to homepage...
-            </p>
-          </div>
+        <div className="fixed top-4 right-4 w-96 bg-green-100 border border-green-500 text-green-700 px-4 py-3 rounded shadow-lg">
+          <p className="font-medium">
+            Bid selected successfully! Contact information has been sent to your email. 
+            Redirecting to homepage...
+          </p>
         </div>
       )}
       <div className='border border-base-100 rounded-lg mt-16 p-8'>
@@ -461,6 +452,7 @@ const fetchData = async () => {
           </div>
         )}
       </div>
+      {showLoadingOverlay && <LoadingOverlay message="Processing bid selection..." />}
     </div>
   );
 };
