@@ -8,7 +8,7 @@ const LoadingOverlay = ({ message = "Processing..." }) => {
       <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
         <div className="w-64 h-64 mx-auto mb-4 flex items-center justify-center">
         <DotLottieReact 
-  src="../assets/icons/truckanimation.lottie"  // Note: file should be in public directory
+  src="../assets/icons/truckanimation.json"  // Note: file should be in public directory
   loop 
   autoplay 
 />        </div>
