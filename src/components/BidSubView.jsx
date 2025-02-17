@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '../../supabaseClient.js'
 import Header from './Header.jsx'
 import Lightbox from './Lightbox.jsx';
+import LoadingOverlay from './LoadingOverlay';
 
 
 const BidSubView = () => {
@@ -18,6 +19,7 @@ const BidSubView = () => {
   const [submitStatus, setSubmitStatus] = useState('');
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 
@@ -78,6 +80,7 @@ const BidSubView = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setShowLoadingOverlay(true);
     setSubmitStatus('submitting');
 
     try {
@@ -104,6 +107,10 @@ const BidSubView = () => {
     } catch (err) {
       setSubmitStatus('error');
       console.error(err);
+    }
+    finally {
+      setShowLoadingOverlay(false);
+      setLoading(false);
     }
   };
 
@@ -232,6 +239,8 @@ const BidSubView = () => {
         )}
       </form>
     </div>
+    {showLoadingOverlay && <LoadingOverlay message="Submitting delivery request..." />}
+
     </div>
   );
 };
