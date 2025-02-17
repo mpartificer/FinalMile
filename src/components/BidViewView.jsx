@@ -259,7 +259,7 @@ const fetchData = async () => {
       
       const username = import.meta.env.VITE_TWILIO_ACCOUNT_SID;
   
-      const response = await fetch(`{${API_URL}}/api/send-notifications`, {
+      const response = await fetch(`${API_URL}/api/send-notifications`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
