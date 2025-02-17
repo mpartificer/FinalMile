@@ -239,7 +239,7 @@ const BidSubView = () => {
         )}
       </form>
     </div>
-    {showLoadingOverlay && <LoadingOverlay message="Submitting delivery request..." />}
+    {showLoadingOverlay && <LoadingOverlay message="Submitting Bid..." />}
 
     </div>
   );
