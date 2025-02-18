@@ -18,10 +18,12 @@ const DatePicker = ({ value, onChange }) => {
           WebkitAppearance: 'none',
           MozAppearance: 'none',
           appearance: 'none',
-          colorScheme: 'light'
+          colorScheme: 'light',
+          height: '48px', // Explicitly set height
+          minHeight: '48px', // Ensure minimum height
+          lineHeight: '1.25' // Match other inputs line height
         }}
       />
-      {/* This overlay handles the placeholder text */}
       {showPlaceholder && (
         <div 
           className="absolute inset-0 flex items-center pointer-events-none"
@@ -51,16 +53,24 @@ const DatePicker = ({ value, onChange }) => {
         
         /* Hide the default date text when empty */
         input[type="date"]:not(:focus):not([value=""]) {
-          color: #111827;  /* text-gray-900 */
+          color: #111827;
         }
         
         input[type="date"]::before {
-          color: #9CA3AF;  /* text-gray-400 */
+          color: #9CA3AF;
         }
         
         /* Remove the default date format text */
         input[type="date"]::-webkit-datetime-edit-fields-wrapper {
           opacity: ${value ? 1 : 0};
+        }
+
+        /* Force consistent height on iOS */
+        @supports (-webkit-touch-callout: none) {
+          input[type="date"] {
+            min-height: 48px !important;
+            height: 48px !important;
+          }
         }
       `}</style>
     </div>
