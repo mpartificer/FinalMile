@@ -372,7 +372,7 @@ const fetchData = async () => {
         </div>
       )}
       <div className='border border-base-100 rounded-lg mt-16 p-8'>
-        <h1 className='text-base-100 font-semibold text-xl text-left mb-2'>Review bids for {id}</h1>
+        <h1 className='text-base-100 font-semibold text-xl text-left mb-2'>Review bids</h1>
 
         <div className="flex flex-col gap-2 bg-primary space-between rounded-lg p-6">
         {displayData?.image_urls && (

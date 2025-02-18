@@ -126,7 +126,7 @@ const BidSubView = () => {
     <div>
       <Header />
       <div className="mt-16 p-8 max-w-lg bg-primary rounded-xl text-base-100 shadow-lg">
-        <h1 className='text-xl text-gray-900 font-semibold mb-2 text-left'>Submit Bid for Shipment #{id}</h1>
+        <h1 className='text-xl text-gray-900 font-semibold mb-2 text-left'>Submit Bid</h1>
         
         {shipment?.image_urls && shipment.image_urls.length > 0 && (
           <div className="grid grid-cols-2 gap-4 mb-6">
