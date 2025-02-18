@@ -346,7 +346,7 @@ const fetchData = async () => {
   }
 
   if (loading) return (
-    <div className="min-h-screen bg-white">
+    <div className=" bg-white">
       <Header />
       <div className="max-w-md mx-auto mt-16 text-center">Loading...</div>
     </div>
