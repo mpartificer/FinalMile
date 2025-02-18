@@ -8,11 +8,6 @@ const DatePicker = ({ value, onChange }) => {
   return (
     <div className="relative mb-4">
       <div className="relative">
-        {showPlaceholder && (
-          <div className="absolute inset-0 flex items-center pointer-events-none">
-            <span className="text-gray-400 px-3">Deliver By</span>
-          </div>
-        )}
         <input
           type="date"
           value={value}
@@ -26,9 +21,21 @@ const DatePicker = ({ value, onChange }) => {
             "-moz-appearance": "none",
             "appearance": "none",
             "min-height": "48px",
-            "background-color": "white"
+            "background-color": "white",
+            colorScheme: 'light'
           }}
         />
+        {showPlaceholder && (
+          <div 
+            className="absolute inset-0 flex items-center pointer-events-none" 
+            style={{ 
+              background: 'white',
+              WebkitTextFillColor: '#9CA3AF'  // text-gray-400 equivalent
+            }}
+          >
+            <span className="px-3">Deliver By</span>
+          </div>
+        )}
         <Calendar 
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
           size={24} 
