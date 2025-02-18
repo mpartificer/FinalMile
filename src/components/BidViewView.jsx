@@ -314,7 +314,7 @@ const fetchData = async () => {
 
   if (showAuthPrompt) {
     return (
-      <div className=" bg-white">
+      <div className="min-h-screen">
         <Header />
         <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-4 text-gray-900">Enter Authentication Code</h2>
@@ -346,7 +346,7 @@ const fetchData = async () => {
   }
 
   if (loading) return (
-    <div className=" bg-white">
+    <div className="min-h-screen bg-white">
       <Header />
       <div className="max-w-md mx-auto mt-16 text-center">Loading...</div>
     </div>
