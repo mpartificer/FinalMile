@@ -9,9 +9,8 @@ const DatePicker = ({ value, onChange }) => {
           type="date"
           value={value}
           onChange={onChange}
-          className="bg-white w-full p-3 pl-12 border border-gray-200 rounded-lg text-gray-900 
-                   placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 
-                   focus:border-transparent appearance-none hover:bg-white"
+          className="bg-white w-full p-3 pr-12 border border-gray-200 rounded-lg text-gray-900 
+                   placeholder:text-gray-400 focus:bg-white hover:bg-white"
           style={{
             // Reset browser styles
             "-webkit-appearance": "none",
@@ -22,10 +21,10 @@ const DatePicker = ({ value, onChange }) => {
             // Force display of calendar icon on iOS
             "background-color": "white"
           }}
-          placeholder="Select date"
+          placeholder="Deliver By"
         />
         <Calendar 
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
           size={24} 
         />
       </div>
