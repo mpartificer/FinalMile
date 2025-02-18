@@ -317,9 +317,9 @@ const fetchData = async () => {
       <div className="min-h-screen">
         <Header />
         <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900">Enter Authentication Code</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">Enter Access Code</h2>
           <p className="text-gray-600 mb-4">
-            Please enter the authentication code sent to your email.
+            We created a secure access code for your new shipment. You can find it in the e-mail confirming the details of your shipment.
           </p>
           <form onSubmit={handleAuthSubmit} className="space-y-4">
             <input
