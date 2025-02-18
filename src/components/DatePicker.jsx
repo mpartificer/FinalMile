@@ -6,7 +6,7 @@ const DatePicker = ({ value, onChange }) => {
   const showPlaceholder = !value && !isFocused;
 
   return (
-    <div className="relative mb-4">
+    <div className="relative">
       <div className="relative">
         <style>
           {`
@@ -31,7 +31,7 @@ const DatePicker = ({ value, onChange }) => {
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="bg-white w-full p-3 pr-12 border border-gray-200 rounded-lg text-gray-900 
+          className="bg-white w-full p-3 pr-12 mb-4 border border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-400 
                    focus:bg-white hover:bg-white"
           style={{
             "-webkit-appearance": "none",
