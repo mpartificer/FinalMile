@@ -1,6 +1,6 @@
 // ImageUploader.jsx
 import React, { useState, useRef } from "react";
-import { X } from "lucide-react";
+import { X, Upload } from "lucide-react";
 import Lightbox from "./Lightbox";
 
 const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
@@ -14,7 +14,6 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
         if (file.type === 'image/heic' || file.type === 'image/heif') {
             setIsConverting(true);
             try {
-                // Dynamically import heic2any
                 const heic2any = (await import('heic2any')).default;
                 
                 const convertedBlob = await heic2any({
@@ -23,7 +22,6 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
                     quality: 0.8
                 });
 
-                // Create a new file from the converted blob
                 const convertedFile = new File(
                     [convertedBlob],
                     file.name.replace(/\.(heic|HEIC|heif|HEIF)$/, '.jpg'),
@@ -49,19 +47,13 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
             
             try {
                 for (const file of newFiles) {
-                    // Convert HEIC files to JPEG
                     const processedFile = await convertHeicToJpeg(file);
                     convertedFiles.push(processedFile);
-                    
-                    // Create preview URL
                     const previewUrl = URL.createObjectURL(processedFile);
                     newPreviewUrls.push(previewUrl);
                 }
                 
-                // Update preview images
                 setPreviewImages(prev => [...prev, ...newPreviewUrls]);
-                
-                // Pass the converted files to parent
                 setDeliveryPhotos(prev => [...prev, ...convertedFiles]);
             } catch (error) {
                 console.error('Error processing images:', error);
@@ -71,16 +63,13 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
     }
 
     const removeImage = (index) => {
-        // Revoke the URL to prevent memory leaks
         URL.revokeObjectURL(previewImages[index]);
-        
         setPreviewImages(prev => prev.filter((_, i) => i !== index));
         setDeliveryPhotos(prev => prev.filter((_, i) => i !== index));
     };
 
     React.useEffect(() => {
         if (deliveryPhotos.length === 0) {
-            // Cleanup preview URLs
             previewImages.forEach(url => URL.revokeObjectURL(url));
             setPreviewImages([]);
             if (fileInputRef.current) {
@@ -93,22 +82,37 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
         setSelectedImageIndex(index);
         setIsLightboxOpen(true);
     };
+
+    const triggerFileInput = () => {
+        fileInputRef.current?.click();
+    };
  
     return (
         <div className="space-y-4">
-            <input 
-                ref={fileInputRef}
-                type="file" 
-                className="file-input file-input-bordered file-input-secondary w-full max-w-xs" 
-                onChange={handleChange}
-                accept="image/*,.heic,.HEIC,.heif,.HEIF"
-                multiple
-            />
+            <div className="relative">
+                <input 
+                    ref={fileInputRef}
+                    type="file" 
+                    className="hidden"
+                    onChange={handleChange}
+                    accept="image/*,.heic,.HEIC,.heif,.HEIF"
+                    multiple
+                />
+                <button 
+                    onClick={triggerFileInput}
+                    className="flex items-center justify-center gap-2 w-full max-w-xs px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
+                >
+                    <Upload size={20} />
+                    <span>Upload Images</span>
+                </button>
+            </div>
+            
             {isConverting && (
                 <div className="text-blue-600">
                     Converting HEIC image... Please wait...
                 </div>
             )}
+            
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {previewImages.map((url, index) => (
                     <div key={index} className="relative group">
@@ -130,6 +134,7 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
                     </div>
                 ))}
             </div>
+            
             <Lightbox
                 isOpen={isLightboxOpen}
                 onClose={() => setIsLightboxOpen(false)}
