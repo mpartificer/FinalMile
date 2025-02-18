@@ -84,14 +84,14 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
     };
 
     const triggerFileInput = (e) => {
-        e.preventDefault(); // Prevent form submission
-        e.stopPropagation(); // Stop event bubbling
+        e.preventDefault();
+        e.stopPropagation();
         fileInputRef.current?.click();
     };
  
     return (
-        <div className="space-y-4" onClick={(e) => e.stopPropagation()}>
-            <div className="relative">
+        <div className="space-y-4 w-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+            <div className="relative w-full flex justify-center">
                 <input 
                     ref={fileInputRef}
                     type="file" 
@@ -115,7 +115,7 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
                 </div>
             )}
             
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full">
                 {previewImages.map((url, index) => (
                     <div key={index} className="relative group">
                         <img
