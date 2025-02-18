@@ -99,6 +99,7 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
                     multiple
                 />
                 <button 
+                    type="button"
                     onClick={triggerFileInput}
                     className="flex items-center justify-center gap-2 w-full max-w-xs px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
                 >
