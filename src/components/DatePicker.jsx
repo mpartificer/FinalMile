@@ -8,6 +8,23 @@ const DatePicker = ({ value, onChange }) => {
   return (
     <div className="relative mb-4">
       <div className="relative">
+        <style>
+          {`
+            input[type="date"]::-webkit-calendar-picker-indicator {
+              opacity: 0;
+              position: absolute;
+              right: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              cursor: pointer;
+            }
+            input[type="date"]::-webkit-inner-spin-button,
+            input[type="date"]::-webkit-clear-button {
+              display: none;
+            }
+          `}
+        </style>
         <input
           type="date"
           value={value}
@@ -15,24 +32,14 @@ const DatePicker = ({ value, onChange }) => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           className="bg-white w-full p-3 pr-12 border border-gray-200 rounded-lg text-gray-900 
-                   focus:bg-white hover:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 
-                   focus:border-transparent"
+                   focus:bg-white hover:bg-white"
           style={{
             "-webkit-appearance": "none",
             "-moz-appearance": "none",
             "appearance": "none",
             "min-height": "48px",
             "background-color": "white",
-            colorScheme: 'light',
-            "::-webkit-calendar-picker-indicator": {
-              display: 'none'
-            },
-            "::-webkit-inner-spin-button": {
-              display: 'none'
-            },
-            "::-webkit-clear-button": {
-              display: 'none'
-            }
+            "colorScheme": "light"
           }}
         />
         {showPlaceholder && (
@@ -47,7 +54,7 @@ const DatePicker = ({ value, onChange }) => {
           </div>
         )}
         <Calendar 
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" 
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none z-10" 
           size={24} 
         />
       </div>
