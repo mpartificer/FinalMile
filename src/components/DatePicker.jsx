@@ -13,21 +13,23 @@ const DatePicker = ({ value, onChange }) => {
         onChange={onChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="bg-white w-full p-3 mb-4 border border-gray-200 rounded-lg text-gray-900 appearance-none"
+        className="bg-white w-full p-3 mb-4 border border-gray-200 rounded-lg text-gray-900 focus:bg-white hover:bg-white"
         style={{
-          colorScheme: 'light',
           WebkitAppearance: 'none',
           MozAppearance: 'none',
-          background: 'white'
+          appearance: 'none',
+          colorScheme: 'light'
         }}
       />
-      {/* Overlay to hide the default date format text */}
-      {!value && (
+      {/* This overlay handles the placeholder text */}
+      {showPlaceholder && (
         <div 
-          className="absolute inset-0 bg-white pointer-events-none flex items-center px-3"
-          style={{ marginBottom: '1rem' }}
+          className="absolute inset-0 flex items-center pointer-events-none"
+          style={{ 
+            marginBottom: '1rem'
+          }}
         >
-          <span className="text-gray-400">Deliver By</span>
+          <span className="px-3 text-gray-400">Deliver By</span>
         </div>
       )}
       <Calendar 
@@ -36,7 +38,7 @@ const DatePicker = ({ value, onChange }) => {
         size={24} 
       />
       <style>{`
-        /* Hide the default date picker icon */
+        /* Hide the default calendar picker indicator */
         input[type="date"]::-webkit-calendar-picker-indicator {
           opacity: 0;
           width: 100%;
@@ -47,31 +49,18 @@ const DatePicker = ({ value, onChange }) => {
           cursor: pointer;
         }
         
-        /* Remove inner shadow on iOS */
-        input[type="date"] {
-          -webkit-appearance: none;
-          box-shadow: none !important;
+        /* Hide the default date text when empty */
+        input[type="date"]:not(:focus):not([value=""]) {
+          color: #111827;  /* text-gray-900 */
         }
         
-        /* Remove any default styling */
-        input[type="date"]::-webkit-datetime-edit {
-          color: var(--tw-text-opacity);
+        input[type="date"]::before {
+          color: #9CA3AF;  /* text-gray-400 */
         }
         
+        /* Remove the default date format text */
         input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-          padding: 0;
-        }
-        
-        input[type="date"]::-webkit-datetime-edit-text,
-        input[type="date"]::-webkit-datetime-edit-month-field,
-        input[type="date"]::-webkit-datetime-edit-day-field,
-        input[type="date"]::-webkit-datetime-edit-year-field {
-          color: inherit;
-        }
-        
-        /* Hide the placeholder when value exists */
-        input[type="date"]:not(:placeholder-shown) + div {
-          display: none;
+          opacity: ${value ? 1 : 0};
         }
       `}</style>
     </div>
