@@ -1,54 +1,34 @@
 import React from 'react';
+import { Calendar } from 'lucide-react';
 
 const DatePicker = ({ value, onChange }) => {
   return (
     <div className="relative mb-4">
-      <input
-        type="date"
-        value={value}
-        onChange={onChange}
-        required
-        className="bg-white w-full p-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400"
-      />
-      <style>
-        {`
-          /* Hide default placeholder */
-          input[type="date"]::-webkit-datetime-edit-fields-wrapper { 
-            opacity: ${value ? 1 : 0};
-          }
-          
-          /* Show custom placeholder */
-          input[type="date"]::before {
-            color: #9CA3AF;
-            content: "Deliver By";
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: ${value ? 'none' : 'block'};
-          }
-          
-          /* Style the calendar picker icon */
-          input[type="date"]::-webkit-calendar-picker-indicator {
-            color: rgba(0, 0, 0, 0);
-            opacity: 1;
-            display: block;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="%23666" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>') center / contain no-repeat;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-          }
-
-          /* Style the text when a date is selected */
-          input[type="date"] {
-            color: #111827;
-          }
-        `}
-      </style>
+      <div className="relative">
+        <input
+          type="date"
+          value={value}
+          onChange={onChange}
+          className="bg-white w-full p-3 pl-12 border border-gray-200 rounded-lg text-gray-900 
+                   placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 
+                   focus:border-transparent appearance-none hover:bg-white"
+          style={{
+            // Reset browser styles
+            "-webkit-appearance": "none",
+            "-moz-appearance": "none",
+            "appearance": "none",
+            // Ensure consistent sizing
+            "min-height": "48px",
+            // Force display of calendar icon on iOS
+            "background-color": "white"
+          }}
+          placeholder="Select date"
+        />
+        <Calendar 
+          className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+          size={24} 
+        />
+      </div>
     </div>
   );
 };
