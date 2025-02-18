@@ -83,12 +83,14 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
         setIsLightboxOpen(true);
     };
 
-    const triggerFileInput = () => {
+    const triggerFileInput = (e) => {
+        e.preventDefault(); // Prevent form submission
+        e.stopPropagation(); // Stop event bubbling
         fileInputRef.current?.click();
     };
  
     return (
-        <div className="space-y-4">
+        <div className="space-y-4" onClick={(e) => e.stopPropagation()}>
             <div className="relative">
                 <input 
                     ref={fileInputRef}
@@ -98,14 +100,13 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
                     accept="image/*,.heic,.HEIC,.heif,.HEIF"
                     multiple
                 />
-                <button 
-                    type="button"
+                <div 
                     onClick={triggerFileInput}
-                    className="flex items-center justify-center gap-2 w-full max-w-xs px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
+                    className="flex items-center justify-center gap-2 w-full max-w-xs px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors cursor-pointer"
                 >
                     <Upload size={20} />
                     <span>Upload Images</span>
-                </button>
+                </div>
             </div>
             
             {isConverting && (
@@ -124,7 +125,9 @@ const ImageUploader = ({ setDeliveryPhotos, deliveryPhotos = [] }) => {
                             onClick={() => openLightbox(index)}
                         />
                         <button
+                            type="button"
                             onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation();
                                 removeImage(index);
                             }}
