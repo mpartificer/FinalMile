@@ -151,7 +151,7 @@ const BidSubView = () => {
           setCurrentIndex={setCurrentImageIndex}
         />
 
-        <div className="flex flex-col text-base-100">
+        <div className="flex flex-col text-left text-base-100">
           <div className="flex flex-row gap-2">Shipment Company: {shipment.company_name}</div>
           <div className="flex flex-row gap-2">Delivery Area: {shipment.rural_area}</div>
           <div className="flex flex-row gap-2">Vehicle Size: {shipment.vehicle_size}</div>
