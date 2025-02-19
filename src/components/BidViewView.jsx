@@ -361,7 +361,7 @@ const BidViewView = () => {
     return (
       <div className="min-h-screen">
         <Header />
-        <div className="max-w-md mx-auto mt-8 p-4 sm:p-6 bg-white rounded-lg shadow-lg">
+        <div className="max-w-md mx-auto mt-12 p-4 sm:p-6 bg-white rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-4 text-gray-900">Enter Access Code</h2>
           <p className="text-gray-600 mb-4">
             We created a secure access code for your new shipment. You can find it in the e-mail confirming the details of your shipment.
@@ -393,7 +393,7 @@ const BidViewView = () => {
   if (loading) return (
     <div className="min-h-screen bg-white">
       <Header />
-      <div className="max-w-md mx-auto mt-8 text-center p-4">
+      <div className="max-w-md mx-auto mt-12 text-center p-4">
         <div className="animate-pulse flex flex-col items-center">
           <div className="rounded-full bg-slate-200 h-12 w-12 mb-4"></div>
           <div className="h-4 bg-slate-200 rounded w-28 mb-2.5"></div>
@@ -406,7 +406,7 @@ const BidViewView = () => {
   if (error) return (
     <div className="min-h-screen">
       <Header />
-      <div className="max-w-md mx-auto mt-8 p-4 text-red-600 bg-red-50 rounded-lg">
+      <div className="max-w-md mx-auto mt-12 p-4 text-red-600 bg-red-50 rounded-lg">
         {error}
       </div>
     </div>
@@ -415,7 +415,7 @@ const BidViewView = () => {
   if (!displayData) return (
     <div className="min-h-screen">
       <Header />
-      <div className="max-w-md mx-auto mt-8 p-4 text-gray-700">
+      <div className="max-w-md mx-auto mt-12 p-4 text-gray-700">
         No shipment found
       </div>
     </div>
@@ -433,7 +433,7 @@ const BidViewView = () => {
         </div>
       )}
       
-      <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 mt-6">
+      <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 mt-12">
         <div className="border border-base-100 rounded-lg p-4 sm:p-6">
           <h1 className="text-base-100 font-semibold text-xl text-left mb-4">Review bids</h1>
 
@@ -524,7 +524,7 @@ const BidViewView = () => {
               </div>
             </div>
           ) : (
-            <div className="mt-8 p-4 text-base-100 bg-gray-50 rounded-lg text-center">
+            <div className="mt-12 p-4 text-base-100 bg-gray-50 rounded-lg text-center">
               <h2 className="text-xl font-semibold mb-2">No Bids Yet</h2>
               <p>This shipment hasn't received any bids yet.</p>
             </div>
